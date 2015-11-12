@@ -1,16 +1,21 @@
 import flask
 
 app = flask.Flask(__name__)
+app.sidebar_items = [
+    ('/login', 'login', 'Bejelentkezés'),
+    ('/tours', 'tours', 'Túrák'),
+    ('/statictics', 'statistics', 'Statisztikák')
+]
 
 
 @app.route('/')
 def home():
-    return flask.render_template('home.html')
+    return flask.render_template('home.html', app=app)
 
 
 @app.route('/login')
 def login():
-    return flask.render_template('login.html')
+    return flask.render_template('login.html', app=app)
 
 
 @app.route('/browser')
