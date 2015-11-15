@@ -11,8 +11,8 @@ users = Blueprint('users', __name__)
 def login():
     login_form = LoginForm()
 
-    # if loginform.submit() and loginform.validate():
-    #     return 'Success'
+    if login_form.validate_on_submit():
+        return 'Success'
 
     return HTMLBeautifier.beautify(render_template('login.html', login_form=login_form, sidebar_items=sidebar_items), 2)
 
@@ -21,8 +21,8 @@ def login():
 def register():
     register_form = RegisterForm()
 
-    # if register_form.validate_on_submit():
-    #     return 'Success'
+    if register_form.validate_on_submit():
+        return 'Success'
 
     return HTMLBeautifier.beautify(
         render_template('register.html', register_form=register_form, sidebar_items=sidebar_items), 2)
