@@ -14,7 +14,9 @@ def login():
     if login_form.validate_on_submit():
         return 'Success'
 
-    return HTMLBeautifier.beautify(render_template('login.html', login_form=login_form, sidebar_items=sidebar_items), 2)
+    return HTMLBeautifier.beautify(
+        render_template('login.html', login_form=login_form,
+                        sidebar_items=sidebar_items), 2)
 
 
 @users.route('/register', methods=('GET', 'POST'))
@@ -25,4 +27,5 @@ def register():
         return 'Success'
 
     return HTMLBeautifier.beautify(
-        render_template('register.html', register_form=register_form, sidebar_items=sidebar_items), 2)
+        render_template('register.html', register_form=register_form,
+                        sidebar_items=sidebar_items), 2)

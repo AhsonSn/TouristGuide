@@ -8,9 +8,11 @@ basic = Blueprint('basic', __name__)
 
 @basic.route('/')
 def home():
-    return HTMLBeautifier.beautify(render_template('home.html', sidebar_items=sidebar_items), 2)
+    return HTMLBeautifier.beautify(
+        render_template('home.html', sidebar_items=sidebar_items), 2)
 
 
 @basic.route('/tours')
 def tours():
-    return HTMLBeautifier.beautify(render_template('tours.html', sidebar_items=sidebar_items), 2)
+    return HTMLBeautifier.beautify(
+        render_template('tours.html', sidebar_items=sidebar_items), 2)
