@@ -1,5 +1,5 @@
-          <ul class="nav nav-sidebar">
-            {% for href, id, caption in sidebar_items -%}
-            <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
-            {% endfor %}
-          </ul>
+<ul class="nav nav-sidebar">
+  {% for href, id, caption in sidebar_items -%}
+  <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+  {% endfor %}
+</ul>
