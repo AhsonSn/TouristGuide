@@ -1,17 +1,23 @@
-from wtforms import Form
+from flask_wtf import Form
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, EqualTo, Email
 
 
 class LoginForm(Form):
-    name = StringField('Felhasználónév', validators=[DataRequired()])
-    pwd = PasswordField('Jelszó', validators=[DataRequired()])
-    submit = SubmitField('Belépés')
+    def generate_csrf_token(self, csrf_context):
+        pass
+
+    name = StringField(u'Felhasználónév', validators=[DataRequired()])
+    pwd = PasswordField(u'Jelszó', validators=[DataRequired()])
+    submit = SubmitField(u'Belépés')
 
 
 class RegisterForm(Form):
-    name = StringField('Felhasználónév', validators=[DataRequired()])
-    email = StringField('E-mail cím', validators=[DataRequired(), Email()])
-    pwd = PasswordField('Jelszó', validators=[DataRequired()])
-    pwdRepeat = PasswordField('Jelszó újra', validators=[EqualTo(pwd)])
-    submit = SubmitField('Regisztráció')
+    def generate_csrf_token(self, csrf_context):
+        pass
+
+    name = StringField(u'Felhasználónév', validators=[DataRequired()])
+    email = StringField(u'E-mail cím', validators=[DataRequired(), Email()])
+    pwd = PasswordField(u'Jelszó', validators=[DataRequired()])
+    pwdRepeat = PasswordField(u'Jelszó újra', validators=[EqualTo(pwd)])
+    submit = SubmitField(u'Regisztráció')

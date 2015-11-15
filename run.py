@@ -1,3 +1,7 @@
+from flask_script import Manager
+
 from app import app
 
-app.run()
+manager = Manager(app)
+
+manager.run()
