@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#Zoli nem megy
 
 from flask_script import Manager
 
