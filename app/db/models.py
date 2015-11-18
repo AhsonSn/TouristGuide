@@ -10,6 +10,7 @@ class Role(db.Model):
     def __repr__(self):
         return '<Role %r>' % self.name
 
+
 class Experience(db.Model):
     __tablename__ = 'experiences'
 
@@ -18,6 +19,7 @@ class Experience(db.Model):
 
     def __repr__(self):
         return '<Experience %r>' % self.name
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -38,7 +40,7 @@ class User(db.Model):
 
 
 class Tour(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'tours'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, index=True)
@@ -52,12 +54,13 @@ class Tour(db.Model):
     def __repr__(self):
         return '<Tour %r>' % self.tourname
 
+
 class Registration(db.Model):
     __tablename__ = 'registrations'
 
     id = db.Column(db.Integer, primary_key=True)
-    tourid = db.Column(db.Integer(10), nullable=False)
-    userid = db.Column(db.Integer(10), nullable=False)
+    tourid = db.Column(db.Integer(10), db.ForignKey('tours.id'), nullable=False)
+    userid = db.Column(db.Integer(10), db.ForignKey('users.id'), nullable=False)
     date = db.Column(db.DateTime)
     isPaid = db.Column(db.Boolean)
 
