@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#most
 
 from flask_script import Manager
 
