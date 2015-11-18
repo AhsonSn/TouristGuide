@@ -5,11 +5,11 @@ from flask_sqlalchemy import SQLAlchemy
 from app.basic.views import basic
 from app.users.views import users
 
-app = Flask(__name__)
-app.config.from_object('config')
+tourist_guide = Flask(__name__)
+tourist_guide.config.from_object('config')
 
-bootstrap = Bootstrap(app)
-db = SQLAlchemy(app)
+bootstrap = Bootstrap(tourist_guide)
+database = SQLAlchemy(tourist_guide)
 
-app.register_blueprint(basic)
-app.register_blueprint(users)
+tourist_guide.register_blueprint(basic)
+tourist_guide.register_blueprint(users)

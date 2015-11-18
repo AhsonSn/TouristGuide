@@ -1,68 +1,68 @@
-from app import db
+from app import database
 
 
-class Role(db.Model):
+class Role(database.Model):
     __tablename__ = 'roles'
 
-    id = db.Column(db.Integer(10), primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    id = database.Column(database.Integer(), primary_key=True)
+    name = database.Column(database.String(64), unique=True)
 
     def __repr__(self):
         return '<Role %r>' % self.name
 
 
-class Experience(db.Model):
+class Experience(database.Model):
     __tablename__ = 'experiences'
 
-    id = db.Column(db.Integer(10), primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    id = database.Column(database.Integer(), primary_key=True)
+    name = database.Column(database.String(64), unique=True)
 
     def __repr__(self):
         return '<Experience %r>' % self.name
 
 
-class User(db.Model):
+class User(database.Model):
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    password = db.Column(db.String(40), nullable=False)
-    fullname = db.Column(db.Strin(64), nullable=False)
-    avatarsrc = db.Column(db.String(100))
-    birth = db.Column(db.Date)
-    experience = db.Column(db.Integer(10), db.ForeignKey('experiences.id'))
-    accounttype = db.Column(db.Integer(10), db.ForeignKey('roles.id'))
-    email = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.Integer(11))
+    id = database.Column(database.Integer, primary_key=True)
+    username = database.Column(database.String(64), unique=True, index=True)
+    password = database.Column(database.String(40), nullable=False)
+    fullname = database.Column(database.String(64), nullable=False)
+    avatarsrc = database.Column(database.String(100))
+    birth = database.Column(database.Date)
+    experience = database.Column(database.Integer(10), database.ForeignKey('experiences.id'))
+    accounttype = database.Column(database.Integer(10), database.ForeignKey('roles.id'))
+    email = database.Column(database.String(100), nullable=False)
+    phone = database.Column(database.Integer(11))
 
     def __repr__(self):
         return '<User %r>' % self.username
 
 
-class Tour(db.Model):
+class Tour(database.Model):
     __tablename__ = 'tours'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, index=True)
-    startdatetime = db.Column(db.DateTime)
-    enddatetime = db.Column(db.DateTime)
-    images = db.Column(db.String(1000))
-    experience = db.Column(db.Integer(10), db.ForeignKey('experiences.id'))
-    tourguidid = db.Column(db.Integer(10), db.ForeignKey('users.id'))
-    description = db.Column(db.Strin(1000))
+    id = database.Column(database.Integer, primary_key=True)
+    name = database.Column(database.String(64), unique=True, index=True)
+    startdatetime = database.Column(database.DateTime)
+    enddatetime = database.Column(database.DateTime)
+    images = database.Column(database.String(1000))
+    experience = database.Column(database.Integer(10), database.ForeignKey('experiences.id'))
+    tourguidid = database.Column(database.Integer(10), database.ForeignKey('users.id'))
+    description = database.Column(database.Strin(1000))
 
     def __repr__(self):
         return '<Tour %r>' % self.tourname
 
 
-class Registration(db.Model):
+class Registration(database.Model):
     __tablename__ = 'registrations'
 
-    id = db.Column(db.Integer, primary_key=True)
-    tourid = db.Column(db.Integer(10), db.ForignKey('tours.id'), nullable=False)
-    userid = db.Column(db.Integer(10), db.ForignKey('users.id'), nullable=False)
-    date = db.Column(db.DateTime)
-    isPaid = db.Column(db.Boolean)
+    id = database.Column(database.Integer, primary_key=True)
+    tourid = database.Column(database.Integer(10), database.ForignKey('tours.id'), nullable=False)
+    userid = database.Column(database.Integer(10), database.ForignKey('users.id'), nullable=False)
+    date = database.Column(database.DateTime)
+    isPaid = database.Column(database.Boolean)
 
     def __repr__(self):
         return '<Registration %r>' % self.id
