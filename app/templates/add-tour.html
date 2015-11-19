@@ -13,7 +13,10 @@
     {{ add_tour_form.end_date.label(class="control-label") }}
     {{ add_tour_form.end_date(class="form-control") }}
   </div>
-  {{ wtf.form_field(add_tour_form.images) }}
+  <div class="form-group required">
+   {{ add_tour_form.images.label(class="control-label") }}
+     <input accept="image/*" id="images" name="images" required type="file" multiple>
+  </div>
   {{ wtf.form_field(add_tour_form.description) }}
   <div class="form-group">
     {{ add_tour_form.submit(class="btn btn-primary") }}
