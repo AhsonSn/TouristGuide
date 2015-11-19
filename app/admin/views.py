@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 
-from app.admin.forms import AddTourForm, EditTourForm
-from app.basic.models import sidebar_items
+from .forms import AddTourForm, EditTourForm
+from ..basic.models import sidebar_items
 
 admin = Blueprint('admin', __name__)
 

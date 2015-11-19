@@ -1,15 +1,9 @@
 from werkzeug.security import generate_password_hash
+from app import database
+from .models import User, Experience
 
 
 class DBManager(object):
-    def __init__(self):
-        """
-        Reference to the application's database.
-        :return:
-        """
-        from app import database
-        self.db = database
-
     @staticmethod
     def insert_user(form):
         """
@@ -25,7 +19,6 @@ class DBManager(object):
         passw = generate_password_hash(form.pwd.data)
         n = form.name.data
         e = form.email.data
-        from app.db.models import User
         user = User(n, passw, e)
         user.account_type_id = 3
         user.experience_id = 1
@@ -35,7 +28,6 @@ class DBManager(object):
                 or DBManager.get_user_by_email(e) is not None:
             return False
 
-        from app import database
         database.session.add(user)
         database.session.commit()
         return True
@@ -47,7 +39,6 @@ class DBManager(object):
         :param name: username
         :return: User instance
         """
-        from app.db.models import User
         return User.query.filter_by(username=name).first()
 
     @staticmethod
@@ -57,7 +48,6 @@ class DBManager(object):
         :param email_: Users emails
         :return: User instance
         """
-        from app.db.models import User
         return User.query.filter_by(email=email_).first()
 
     @staticmethod
@@ -66,5 +56,4 @@ class DBManager(object):
         Return a list of Experience from database.
         :return: list of Experience
         """
-        from app.db.models import Experience
         return Experience.query.all()

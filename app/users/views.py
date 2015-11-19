@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template
 from werkzeug.security import check_password_hash
 
-from app.basic.models import sidebar_items
-from app.db.dbmanager import DBManager
-from app.users.forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm
+from ..basic.models import sidebar_items
+from ..db.dbmanager import DBManager
 
 users = Blueprint('users', __name__)
 

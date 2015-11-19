@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from html5print import HTMLBeautifier
 
-from app.basic.models import sidebar_items
+from .models import sidebar_items
 
 basic = Blueprint('basic', __name__)
 

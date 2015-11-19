@@ -2,16 +2,23 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 
-from app.admin.views import admin
-from app.basic.views import basic
-from app.users.views import users
+bootstrap = Bootstrap()
+database = SQLAlchemy()
 
-tourist_guide = Flask(__name__)
-tourist_guide.config.from_object('config')
 
-bootstrap = Bootstrap(tourist_guide)
-database = SQLAlchemy(tourist_guide)
+def create_app(config_name):
+    app = Flask(__name__)
+    app.config.from_object(config_name)
 
-tourist_guide.register_blueprint(basic)
-tourist_guide.register_blueprint(users)
-tourist_guide.register_blueprint(admin)
+    bootstrap.init_app(app)
+    database.init_app(app)
+
+    from .admin.views import admin as admin_blueprint
+    from .basic.views import basic as basic_blueprint
+    from .users.views import users as users_blueprint
+
+    app.register_blueprint(basic_blueprint)
+    app.register_blueprint(users_blueprint)
+    app.register_blueprint(admin_blueprint)
+
+    return app
