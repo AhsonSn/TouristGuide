@@ -16,3 +16,8 @@ class DBManager(object):
         user.fullname = ""
         self.db.session.add(user)
         self.db.session.commit()
+
+
+    def get_user(self, name):
+        from app.db.models import User
+        return User.query.filter(username=name)
