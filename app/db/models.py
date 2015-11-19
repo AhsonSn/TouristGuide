@@ -1,6 +1,7 @@
 from app import database
 
 
+
 class Role(database.Model):
     def __init__(self, id_, name_):
         self.id = id_
@@ -30,6 +31,11 @@ class Experience(database.Model):
 
 
 class User(database.Model):
+    def __init__(self, name, pwd, email_):
+        self.username = name
+        self.password = pwd
+        self.email = email_
+
     __tablename__ = 'users'
 
     id = database.Column(database.Integer, primary_key=True)

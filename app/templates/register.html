@@ -5,4 +5,8 @@
 <h1 class="page-header">Register Page</h1>
 {% import "bootstrap/wtf.html" as wtf %}
 {{ wtf.quick_form(register_form) }}
+{{ message }}
+{% if success %}
+<h2>Sikeres regisztráció!</h2>
+{% endif %}
 {% endblock page_content %}
