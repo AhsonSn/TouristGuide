@@ -1,7 +1,6 @@
 from app import database
 
 
-
 class Role(database.Model):
     def __init__(self, id_, name_):
         self.id = id_

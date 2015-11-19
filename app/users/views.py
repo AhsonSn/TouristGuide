@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template
+from werkzeug.security import check_password_hash
 
 from app.basic.models import sidebar_items
 from app.db.dbmanager import DBManager
 from app.users.forms import LoginForm, RegisterForm
-
-from werkzeug.security import check_password_hash
 
 users = Blueprint('users', __name__)
 
@@ -14,8 +13,7 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        db_manager = DBManager()
-        user = db_manager.get_user_by_name(login_form.name.data)
+        user = DBManager.get_user_by_name(login_form.name.data)
         if user is None:
             return 'Username not found'
 
@@ -33,9 +31,8 @@ def register():
     register_form = RegisterForm()
 
     if register_form.validate_on_submit():
-        db_manager = DBManager()
 
-        if db_manager.insert_user(register_form):
+        if DBManager.insert_user(register_form):
             return render_template(
                 'register.html', register_form=register_form,
                 sidebar_items=sidebar_items, success=True,
