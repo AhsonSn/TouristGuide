@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, EqualTo, Email
 
 class LoginForm(Form):
     def generate_csrf_token(self, csrf_context=None):
-        return Form.generate_csrf_token(csrf_context)
+        return super(LoginForm, self).generate_csrf_token(csrf_context)
 
     name = StringField(
         u'Felhasználónév',
