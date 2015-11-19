@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, TextAreaField, FileField
+from wtforms import StringField, TextAreaField, FileField, SubmitField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
 
@@ -32,6 +32,8 @@ class AddTourForm(Form):
         u'Túra leírása',
         validators=[DataRequired(u'Add meg a túra leírását!')]
     )
+
+    submit = SubmitField(u'Túra létrehozása')
 
 
 class EditTourForm(Form):

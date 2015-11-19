@@ -5,23 +5,21 @@
 <h1 class="page-header">Túra hozzáadása</h1>
 <form action="" class="form" method="post" role="form">
 {{ add_tour_form.hidden_tag() }}
-  <div class="form-group required">
-    {{ add_tour_form.name.label(class="control-label") }}
-    {{ add_tour_form.name(class="form-control") }}
-  </div>
+{% import "bootstrap/wtf.html" as wtf %}
+  {{ wtf.form_field(add_tour_form.name) }}
   <div class="form-group form-inline required">
     {{ add_tour_form.start_date.label(class="control-label") }}
     {{ add_tour_form.start_date(class="form-control") }}
     {{ add_tour_form.end_date.label(class="control-label") }}
     {{ add_tour_form.end_date(class="form-control") }}
   </div>
-  <div class="form-group required">
-    {{ add_tour_form.images.label(class="control-label") }}
-    {{ add_tour_form.images(class="form-control") }}
-  </div>
-  <div class="form-group required">
-    {{ add_tour_form.description.label(class="control-label") }}
-    {{ add_tour_form.description(class="form-control") }}
+  {{ wtf.form_field(add_tour_form.images) }}
+  {{ wtf.form_field(add_tour_form.description) }}
+  <div class="form-group">
+    {{ add_tour_form.submit(class="btn btn-primary") }}
   </div>
 </form>
+{% if success %}
+<div class="alert alert-success" role="alert">Túra sikeresen létrehozva!</div>
+{% endif %}
 {% endblock page_content %}

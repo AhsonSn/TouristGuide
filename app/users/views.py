@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template
-from html5print import HTMLBeautifier
 
 from app.basic.models import sidebar_items
-from app.users.forms import LoginForm, RegisterForm
 from app.db.dbmanager import DBManager
+from app.users.forms import LoginForm, RegisterForm
 
 users = Blueprint('users', __name__)
 
@@ -15,9 +14,8 @@ def login():
     if login_form.validate_on_submit():
         return 'Success'
 
-    return HTMLBeautifier.beautify(
-        render_template('login.html', login_form=login_form,
-                        sidebar_items=sidebar_items), 2)
+    return render_template('login.html', login_form=login_form,
+                           sidebar_items=sidebar_items)
 
 
 @users.route('/register', methods=('GET', 'POST'))
@@ -26,16 +24,18 @@ def register():
 
     if register_form.validate_on_submit():
         db_manager = DBManager()
-        succ = db_manager.insert_user(register_form)
-        if succ:
-            return HTMLBeautifier.beautify(
-                render_template('register.html', register_form=register_form,
-                                sidebar_items=sidebar_items, success=True, message=""),  2)
-        else:
-            return HTMLBeautifier.beautify(
-                render_template('register.html', register_form=register_form,
-                                sidebar_items=sidebar_items, success=False, message="A felhasználó név vagy email foglalt."),  2)
 
-    return HTMLBeautifier.beautify(
-        render_template('register.html', register_form=register_form,
-                        sidebar_items=sidebar_items, success=False, message=""), 2)
+        if db_manager.insert_user(register_form):
+            return render_template(
+                'register.html', register_form=register_form,
+                sidebar_items=sidebar_items, success=True,
+                message='Sikeres regisztráció!')
+        else:
+            return render_template(
+                'register.html', register_form=register_form,
+                sidebar_items=sidebar_items, success=False,
+                message='A felhasználónév vagy email már foglalt!')
+
+    return render_template(
+        'register.html', register_form=register_form,
+        sidebar_items=sidebar_items, success=None, message='')
