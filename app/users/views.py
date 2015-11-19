@@ -26,11 +26,16 @@ def register():
 
     if register_form.validate_on_submit():
         db_manager = DBManager()
-        db_manager.insert_user(register_form)
-        return HTMLBeautifier.beautify(
-        render_template('register.html', register_form=register_form,
-                        sidebar_items=sidebar_items, success=True),  2)
+        succ = db_manager.insert_user(register_form)
+        if succ:
+            return HTMLBeautifier.beautify(
+                render_template('register.html', register_form=register_form,
+                                sidebar_items=sidebar_items, success=True, message=""),  2)
+        else:
+            return HTMLBeautifier.beautify(
+                render_template('register.html', register_form=register_form,
+                                sidebar_items=sidebar_items, success=False, message="A felhasználó név vagy email foglalt."),  2)
 
     return HTMLBeautifier.beautify(
         render_template('register.html', register_form=register_form,
-                        sidebar_items=sidebar_items, success=False), 2)
+                        sidebar_items=sidebar_items, success=False, message=""), 2)
