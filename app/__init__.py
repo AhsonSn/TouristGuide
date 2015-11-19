@@ -2,6 +2,7 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 
+from app.admin.views import admin
 from app.basic.views import basic
 from app.users.views import users
 
@@ -13,3 +14,4 @@ database = SQLAlchemy(tourist_guide)
 
 tourist_guide.register_blueprint(basic)
 tourist_guide.register_blueprint(users)
+tourist_guide.register_blueprint(admin)
