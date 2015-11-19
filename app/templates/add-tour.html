@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% set active_page = "add_tour" %}
+{% block title %}Túra hozzáadása{% endblock %}
+{% block page_content %}
+<h1 class="page-header">Túra hozzáadása</h1>
+{% import "bootstrap/wtf.html" as wtf %}
+{{ wtf.quick_form(add_tour_form) }}
+{% endblock page_content %}
