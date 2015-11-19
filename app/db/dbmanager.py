@@ -31,3 +31,8 @@ class DBManager(object):
         from app.db.models import User
         user = User.query.filter_by(email=email_).first()
         return user
+
+    def get_experiences(self):
+        from app.db.models import Experience
+        exps = Experience.query.all()
+        return exps

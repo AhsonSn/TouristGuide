@@ -26,6 +26,12 @@ class Experience(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     name = database.Column(database.String(64), unique=True)
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.id == other.id and self.name == other.name
+
+        return False
+
     def __repr__(self):
         return '<Experience \'{}\', id: {}>'.format(self.name, self.id)
 
