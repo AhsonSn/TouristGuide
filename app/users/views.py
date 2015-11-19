@@ -4,6 +4,8 @@ from app.basic.models import sidebar_items
 from app.db.dbmanager import DBManager
 from app.users.forms import LoginForm, RegisterForm
 
+from werkzeug.security import check_password_hash
+
 users = Blueprint('users', __name__)
 
 
@@ -12,7 +14,15 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        return 'Success'
+        db_manager = DBManager()
+        user = db_manager.get_user_by_name(login_form.name.data)
+        if user is None:
+            return 'Username not found'
+
+        if check_password_hash(user.password, login_form.pwd.data):
+            return 'Success'
+        else:
+            return 'Bad password'
 
     return render_template('login.html', login_form=login_form,
                            sidebar_items=sidebar_items)
