@@ -14,10 +14,20 @@ class DBManager(object):
         user.account_type_id = 3
         user.experience_id = 1
         user.fullname = ""
+
+        if self.get_user_by_name(n) is not None or self.get_user_by_email(e) is not None:
+            return False
+
         self.db.session.add(user)
         self.db.session.commit()
+        return True
 
-
-    def get_user(self, name):
+    def get_user_by_name(self, name):
         from app.db.models import User
-        return User.query.filter(username=name)
+        user = User.query.filter_by(username=name).first()
+        return user
+
+    def get_user_by_email(self, email_):
+        from app.db.models import User
+        user = User.query.filter_by(email=email_).first()
+        return user
