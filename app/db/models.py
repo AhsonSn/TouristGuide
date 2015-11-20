@@ -73,6 +73,11 @@ class User(database.Model):
 
 
 class Tour(database.Model):
+    def __init__(self, name_, exp_, tg_):
+        self.name = name_
+        self.experience_id = exp_
+        self.tour_guide_id = tg_
+
     __tablename__ = 'tours'
 
     id = database.Column(database.Integer, primary_key=True)
