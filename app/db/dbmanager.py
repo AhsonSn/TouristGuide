@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash
 from app import database
-from .models import User, Experience
+from .models import User, Experience, Role
 
 
 class DBManager(object):
@@ -57,3 +57,18 @@ class DBManager(object):
         :return: list of Experience
         """
         return Experience.query.all()
+
+    @staticmethod
+    def get_user_by_role(role_name):
+        """
+        Return a list of user, who's account type is role_name.
+        :param role_name: Account_type_name
+        :return: list of specified user
+        """
+        role = Role.query.filter_by(name=role_name).first()
+        if role is not None:
+            users = User.query.filter_by(account_type_id=role.id).all()
+            if users is not None:
+                return users
+
+        return None
