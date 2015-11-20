@@ -1,5 +1,6 @@
 import unittest
 
+
 from app import create_app
 from app.db.dbmanager import DBManager
 from app.db.models import Experience
@@ -23,6 +24,10 @@ class DBManagerTest(unittest.TestCase):
         print(DBManager.get_user_by_role("Turavezeto"))
         self.assertEquals(True, True)
 
+    def test_insert_tour(self):
+        DBManager.insert_tour()
+        #DBManager.insert_tour("Bükki túra", "2015-11-19 10:10", "2015-11-20 10:10", "", 1, 1, "Káprázatos túrahely.")
+        self.assertEquals(True, True)
 
 if __name__ == '__main__':
     unittest.main()
