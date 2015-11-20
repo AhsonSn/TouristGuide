@@ -19,6 +19,10 @@ class DBManagerTest(unittest.TestCase):
              Experience(3, "Közepesen nehéz"), Experience(4, "Nehéz")]
         self.assertEquals(DBManager.get_experiences(), l)
 
+    def test_get_users_by_role(self):
+        print(DBManager.get_user_by_role("Turavezeto"))
+        self.assertEquals(True, True)
+
 
 if __name__ == '__main__':
     unittest.main()
