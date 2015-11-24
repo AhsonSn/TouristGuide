@@ -2,7 +2,7 @@
 {% set active_page = "register" %}
 {% block title %}Regisztráció{% endblock %}
 {% block page_content %}
-<h1 class="page-header">Register Page</h1>
+<h1 class="page-header">Regisztráció</h1>
 {% import "bootstrap/wtf.html" as wtf %}
 {{ wtf.quick_form(register_form) }}
 {% if success is not none %}

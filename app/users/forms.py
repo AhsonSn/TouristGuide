@@ -1,6 +1,6 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, EqualTo, Email
+from wtforms import StringField, SubmitField, PasswordField, DateField, FileField
+from wtforms.validators import DataRequired, EqualTo, Email, Regexp
 
 
 class LoginForm(Form):
@@ -27,14 +27,6 @@ class RegisterForm(Form):
         validators=[DataRequired(u'Adj meg egy felhasználónevet!')]
     )
 
-    email = StringField(
-        u'E-mail cím',
-        validators=[
-            DataRequired(u'Adj meg egy email címet!'),
-            Email(u'Érvénytelen email cím!')
-        ]
-    )
-
     pwd = PasswordField(
         u'Jelszó',
         validators=[DataRequired(u'Adj meg egy jelszót!')]
@@ -46,6 +38,33 @@ class RegisterForm(Form):
             DataRequired(),
             EqualTo('pwd', u'A jelszavak nem egyeznek meg!')
         ]
+    )
+
+    email = StringField(
+        u'E-mail cím',
+        validators=[
+            DataRequired(u'Adj meg egy email címet!'),
+            Email(u'Érvénytelen email cím!')
+        ]
+    )
+
+    birthName = StringField(
+        u'Születési név',
+        validators=[DataRequired(u'Add meg a születési nevedet!')]
+    )
+
+    birthDate = DateField(
+        u'Születési dátum',
+        validators=[DataRequired(u'Add meg a születési dátumodat!')]
+    )
+
+    phoneNumber = StringField(
+        u'Telefonszám',
+        validators=[Regexp("[0-9]{11}", message="Add meg a telefonszámodat!")]
+    )
+
+    avatar = FileField(
+        u'Profilkép'
     )
 
     submit = SubmitField(u'Regisztráció')
