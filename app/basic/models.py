@@ -4,5 +4,6 @@ sidebar_items = [
     ('/tours', 'tours', 'Túrák'),
     ('/statistics', 'statistics', 'Statisztikák'),
     ('/add-tour', 'add_tour', 'Túra hozzáadás'),
-    ('/edit-tour', 'edit_tour', 'Túra szerkesztés')
+    ('/edit-tour', 'edit_tour', 'Túra szerkesztés'),
+    ('/weather', 'get_weather', 'Időjárás előrejelzés')
 ]
