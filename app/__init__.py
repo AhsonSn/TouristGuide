@@ -16,9 +16,11 @@ def create_app(config_name):
     from .admin.views import admin as admin_blueprint
     from .basic.views import basic as basic_blueprint
     from .users.views import users as users_blueprint
+    from .toursupervisor.views import toursupervisor as toursupervisor_blueprint
 
     app.register_blueprint(basic_blueprint)
     app.register_blueprint(users_blueprint)
     app.register_blueprint(admin_blueprint)
+    app.register_blueprint(toursupervisor_blueprint)
 
     return app

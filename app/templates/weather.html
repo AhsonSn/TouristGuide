@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% set active_page = "register" %}
-{% block title %}Regisztráció{% endblock %}
+{% set active_page = "weather" %}
+{% block title %}Időjárás előrejelzés{% endblock %}
 {% block page_content %}
-<h1 class="page-header">Regisztráció</h1>
+<h1 class="page-header">Időjárás</h1>
 {% import "bootstrap/wtf.html" as wtf %}
-{{ wtf.quick_form(register_form) }}
+{{ wtf.quick_form(weather_form) }}
 {% if success is not none %}
 <p>
   {% if success %}
