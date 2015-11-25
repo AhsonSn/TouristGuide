@@ -3,8 +3,25 @@
 {% block title %}Regisztráció{% endblock %}
 {% block page_content %}
 <h1 class="page-header">Regisztráció</h1>
-{% import "bootstrap/wtf.html" as wtf %}
-{{ wtf.quick_form(register_form) }}
+<form action="" class="form" method="post" role="form" enctype="multipart/form-data">
+  {% import "bootstrap/wtf.html" as wtf %}
+  {{ wtf.form_field(register_form.name) }}
+  {{ wtf.form_field(register_form.pwd) }}
+  {{ wtf.form_field(register_form.pwdRepeat) }}
+  {{ wtf.form_field(register_form.email) }}
+  {{ wtf.form_field(register_form.fullName) }}
+  {{ wtf.form_field(register_form.birthDate) }}
+  {{ wtf.form_field(register_form.phoneNumber) }}
+  <div class="form-group">
+    {{ register_form.avatar.label(class="control-label") }}
+    <input accept="image/*" id="avatar" name="avatar" type="file">
+  </div>
+  {{ register_form.hidden_tag() }}
+  <div class="form-group">
+    {{ register_form.submit(class="btn btn-primary") }}
+  </div>
+</form>
+
 {% if success is not none %}
 <p>
   {% if success %}

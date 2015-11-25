@@ -1,3 +1,14 @@
+from werkzeug.utils import secure_filename
+
+
+class UploadManager(object):
+    @staticmethod
+    def upload_avatar(image):
+        filename = secure_filename(image.filename)
+        print("Image uploaded: {}".format(filename))
+        return filename
+
+
 sidebar_items = [
     ('/login', 'login', 'Bejelentkezés'),
     ('/register', 'register', 'Regisztráció'),

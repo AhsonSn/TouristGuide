@@ -1,11 +1,12 @@
 from werkzeug.security import generate_password_hash
-from .models import User, Role
 from app import database
+from .models import User, Role
+from .formextractor import FormExtractor
+from ..basic.models import UploadManager
 
 
 class UserManager(object):
-
-    def insert_user(self, name, pwd, email, fullname, birth, avatar = "", experience_id=1, account_type_id=3 ):
+    def insert_user(self, form, experience_id=1, account_type_id=3):
         """
         Inserts a user to database, from the registration form.
 
@@ -13,25 +14,28 @@ class UserManager(object):
         This method checks if a username or email is already in the database.
         If it does, this method returns False.
         If it doesn't, then adds a new user to the database.
-        :param name: user name
-        :param pwd: user password
-        :param email: user email
-        :param fullname: full name of user
+        :param form: the registration form object
         :param experience_id: experience in tour
         :param account_type_id: user type: CEO, tourguide, tourmanager, user
-        :return: True if insert was succesed
+        :return: True if insert was successful
         """
 
-        passw = generate_password_hash(pwd)
-        user = User(name, passw, email)
+        extr = FormExtractor.extract(form)
+        passw = generate_password_hash(extr["pwd"])
+        user = User(extr["name"], passw, extr["email"])
         user.account_type_id = account_type_id
         user.experience_id = experience_id
-        user.fullname = fullname
-        user.birth = birth
-        user.avatar_src = avatar
+        user.fullname = extr["fullName"]
+        user.birth = extr["birth"]
+        user.phone = extr["phone"]
 
-        if UserManager.get_user_by_name(name) is not None \
-                or UserManager.get_user_by_email(email) is not None:
+        if extr["avatar"]:
+            user.avatar_src = UploadManager.upload_avatar(extr["avatar"])
+        else:
+            user.avatar_src = None
+
+        if self.get_user_by_name(extr["name"]) is not None \
+                or self.get_user_by_email(extr["email"]) is not None:
             return False
 
         database.session.add(user)
