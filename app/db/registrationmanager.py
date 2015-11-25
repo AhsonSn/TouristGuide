@@ -1,0 +1,4 @@
+
+
+class RegistrationManager(object):
+    pass
