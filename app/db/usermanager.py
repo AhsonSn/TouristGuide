@@ -5,7 +5,7 @@ from app import database
 
 class UserManager(object):
 
-    def insert_user(self, name, pwd, email, fullname, experience_id=1, account_type_id=3 ):
+    def insert_user(self, name, pwd, email, fullname, birth, avatar = "", experience_id=1, account_type_id=3 ):
         """
         Inserts a user to database, from the registration form.
 
@@ -27,6 +27,8 @@ class UserManager(object):
         user.account_type_id = account_type_id
         user.experience_id = experience_id
         user.fullname = fullname
+        user.birth = birth
+        user.avatar_src = avatar
 
         if UserManager.get_user_by_name(name) is not None \
                 or UserManager.get_user_by_email(email) is not None:

@@ -48,9 +48,9 @@ class RegisterForm(Form):
         ]
     )
 
-    birthName = StringField(
-        u'Születési név',
-        validators=[DataRequired(u'Add meg a születési nevedet!')]
+    fullName = StringField(
+        u'Teljes név',
+        validators=[DataRequired(u'Add meg a teljes nevedet!')]
     )
 
     birthDate = DateField(
