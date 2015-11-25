@@ -3,7 +3,7 @@ from werkzeug.security import check_password_hash
 
 from .forms import LoginForm, RegisterForm
 from ..basic.models import sidebar_items
-from ..db.dbmanager import DBManager
+from ..db.dbfactory import DBFactory
 
 users = Blueprint('users', __name__)
 
@@ -13,7 +13,8 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        user = DBManager.get_user_by_name(login_form.name.data)
+        instance = DBFactory.get_instance()
+        user = instance.User.get_user_by_name(login_form.name.data)
         if user is None:
             return 'Username not found'
 
@@ -31,8 +32,8 @@ def register():
     register_form = RegisterForm()
 
     if register_form.validate_on_submit():
-
-        if DBManager.insert_user(register_form):
+        instance = DBFactory.get_instance()
+        if instance.User.insert_user(register_form):
             return render_template(
                 'register.html', register_form=register_form,
                 sidebar_items=sidebar_items, success=True,
