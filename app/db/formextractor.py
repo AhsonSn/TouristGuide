@@ -8,6 +8,8 @@ class FormExtractor(object):
         if isinstance(form, RegisterForm):
             return dict(name=form.name.data, pwd=form.pwd.data,
                         email=form.email.data, fullName=form.fullName.data,
-                        birth=form.birthDate.data, phone=form.phoneNumber.data,
+                        birth=form.birthDate.data,
+                        phone=form.phoneNumber.data
+                        if form.phoneNumber.data else None,
                         avatar=request.files['avatar']
                         if form.avatar.has_file() else None)
