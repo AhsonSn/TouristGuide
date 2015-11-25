@@ -1,11 +1,13 @@
 from werkzeug.security import generate_password_hash
 from .models import User, Role
 from app import database
+from .formextractor import FormExtractor
 
 
 class UserManager(object):
 
-    def insert_user(self, name, pwd, email, fullname, birth, avatar = "", experience_id=1, account_type_id=3 ):
+
+    def insert_user_by_params(self, name, pwd, email, fullname, birth, avatar = "", experience_id=1, account_type_id=3 ):
         """
         Inserts a user to database, from the registration form.
 
@@ -37,6 +39,17 @@ class UserManager(object):
         database.session.add(user)
         database.session.commit()
         return True
+
+    def insert_user(self, form):
+        """
+        Insert a user by form.
+
+        :param form:
+        :return: None
+        """
+        data = FormExtractor.extract(form)
+        self.insert_user_by_params(*data)
+
 
     def get_user_by_name(self, name):
         """
