@@ -7,3 +7,5 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 SECRET_KEY = '2LVjegCxwzm0NvUJ'
+UPLOAD_FOLDER = os.path.join(basedir, 'app', 'static', 'uploads')
+AVATAR_UPLOAD_FOLDER = os.path.join(UPLOAD_FOLDER, 'avatars')

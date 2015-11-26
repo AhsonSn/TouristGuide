@@ -1,17 +1,16 @@
+from flask import request
 from app.users.forms import LoginForm, RegisterForm
 
 
 class FormExtractor(object):
-
     @staticmethod
     def extract(form):
         if isinstance(form, RegisterForm):
-            ret = (form.name.data, form.pwd.data, form.email.data,
-                   form.fullName.data, form.birthDate.data, form.avatar)
-            return ret
-
-        if isinstance(form, LoginForm):
-            ret = (form.name.data, form.pwd.data)
-            return ret
-
+            return dict(name=form.name.data, pwd=form.pwd.data,
+                        email=form.email.data, fullName=form.fullName.data,
+                        birth=form.birthDate.data,
+                        phone=form.phoneNumber.data
+                        if form.phoneNumber.data else None,
+                        avatar=request.files['avatar']
+                        if form.avatar.has_file() else None)
 
