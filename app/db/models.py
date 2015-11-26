@@ -66,7 +66,7 @@ class User(database.Model):
     )
 
     email = database.Column(database.String(100), nullable=False)
-    phone = database.Column(database.Integer)
+    phone = database.Column(database.String(11))
 
     def __repr__(self):
         return '<User \'{}\'>'.format(self.username)
