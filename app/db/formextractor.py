@@ -13,3 +13,6 @@ class FormExtractor(object):
                         if form.phoneNumber.data else None,
                         avatar=request.files['avatar']
                         if form.avatar.has_file() else None)
+
+        if isinstance(form, LoginForm):
+            return dict(name=form.name.data, pwd=form.pwd.data)

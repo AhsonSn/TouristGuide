@@ -1,8 +1,8 @@
 from werkzeug.security import generate_password_hash
 from app import database
-from .models import User, Role
 from .formextractor import FormExtractor
-from ..basic.models import UploadManager
+from .models import User, Role
+from app.basic.models import UploadManager
 
 
 class UserManager(object):
@@ -34,7 +34,7 @@ class UserManager(object):
         else:
             user.avatar_src = None
 
-        if self.get_user_by_name(extr["name"]) is not None \
+        if self.get_user_with_name(extr["name"]) is not None \
                 or self.get_user_by_email(extr["email"]) is not None:
             return False
 
@@ -42,7 +42,8 @@ class UserManager(object):
         database.session.commit()
         return True
 
-    def get_user_by_name(self, name):
+
+    def get_user_with_name(self, name):
         """
         Return a User instance where username is equal name.
 
@@ -50,6 +51,10 @@ class UserManager(object):
         :return: User instance
         """
         return User.query.filter_by(username=name).first()
+
+    def get_user_by_name(self, form):
+        dict = FormExtractor.extract(form)
+        return self.get_user_with_name(dict["name"])
 
     def get_user_by_email(self, email_):
         """

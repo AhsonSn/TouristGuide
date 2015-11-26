@@ -14,7 +14,7 @@ def login():
 
     if login_form.validate_on_submit():
         instance = DBFactory.get_instance()
-        user = instance.User.get_user_by_name(login_form.name.data)
+        user = instance.User.get_user_by_name(login_form)
         if user is None:
             return 'Username not found'
 
