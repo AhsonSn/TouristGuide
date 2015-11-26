@@ -1,6 +1,8 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField, DateField, FileField
-from wtforms.validators import DataRequired, EqualTo, Email, Regexp
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.fields.html5 import DateField
+from wtforms.validators import DataRequired, EqualTo, Email, Regexp, Optional
+from flask_wtf.file import FileField
 
 
 class LoginForm(Form):
@@ -48,9 +50,9 @@ class RegisterForm(Form):
         ]
     )
 
-    birthName = StringField(
-        u'Születési név',
-        validators=[DataRequired(u'Add meg a születési nevedet!')]
+    fullName = StringField(
+        u'Teljes név',
+        validators=[DataRequired(u'Add meg a teljes nevedet!')]
     )
 
     birthDate = DateField(
@@ -60,7 +62,7 @@ class RegisterForm(Form):
 
     phoneNumber = StringField(
         u'Telefonszám',
-        validators=[Regexp("[0-9]{11}", message="Add meg a telefonszámodat!")]
+        validators=[Optional(), Regexp("[0-9]{11}", message="Add meg a telefonszámodat!")]
     )
 
     avatar = FileField(
