@@ -1,8 +1,9 @@
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import database
 from .formextractor import FormExtractor
 from .models import User, Role
 from app.basic.models import UploadManager
+from sqlalchemy import update
 
 
 class UserManager(object):
@@ -77,3 +78,35 @@ class UserManager(object):
                 return users
 
         return None
+
+    def update_pwd(self, username_, oldpwd, newpwd):
+        """
+        Update the password of user.
+
+        :param username_: username of user
+        :param oldpwd: old password of username
+        :param newpwd: new password of username
+        :return: True if it was updated
+        """
+        act_user = self.get_user_with_name(username_)
+
+        if act_user is not None \
+                and check_password_hash(act_user.password, oldpwd):
+            up = update(User).where(User.username == username_)\
+                .values(password=generate_password_hash(newpwd))
+            database.session.execute(up)
+            database.session.commit()
+            return True
+
+        return False
+
+
+    def update_avatar(self, src):
+        pass
+
+    def update_email(self, email):
+        pass
+
+    def update_experience(self, exp):
+        pass
+
