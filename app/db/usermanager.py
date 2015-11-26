@@ -2,11 +2,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import database
 from .formextractor import FormExtractor
 from .models import User, Role
+from .experiencemanager import ExperienceManager
 from app.basic.models import UploadManager
 from sqlalchemy import update
 
 
 class UserManager(object):
+    def __init__(self, experience):
+        self.exp = experience
+
     def insert_user(self, form, experience_id=1, account_type_id=3):
         """
         Inserts a user to database, from the registration form.
@@ -100,13 +104,55 @@ class UserManager(object):
 
         return False
 
+    def update_avatar(self, username_, src):
+        """
+        Update avatar by user name.
+        :param username_: username of user
+        :param src: new src of user avatar image
+        :return: True if update was succeed.
+        """
+        act_user = self.get_user_with_name(username_)
 
-    def update_avatar(self, src):
-        pass
+        if act_user is not None:
+            up = update(User).where(User.username == username_).values(avatar_src=src)
+            database.session.execute(up)
+            database.session.commit()
+            return True
 
-    def update_email(self, email):
-        pass
+        return False
 
-    def update_experience(self, exp):
-        pass
+    def update_email(self, username_, email):
+        """
+        Update email by username.
+        :param username_: username of user
+        :param email: new email of user
+        :return: True if update was succeed
+        """
+        act_user = self.get_user_with_name(username_)
+
+        if act_user is not None:
+            up = update(User).where(User.username == username_).values(email=email)
+            database.session.execute(up)
+            database.session.commit()
+            return True
+
+        return False
+
+    def update_experience(self, username_, exp_):
+        """
+        Update experience of username.
+        :param username_: username of user
+        :param exp_: experience name
+        :return: True if update was succeed
+        """
+        act_user = self.get_user_with_name(username_)
+        exp = self.exp.get_experience_by_name(exp_)
+
+        if act_user is not None and exp is not None:
+            up = update(User).where(User.username == username_).values(experience_id=exp)
+            database.session.execute(up)
+            database.session.commit()
+            return True
+
+        return False
 
