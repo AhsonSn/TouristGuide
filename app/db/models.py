@@ -108,7 +108,7 @@ class Tour(database.Model):
     description = database.Column(database.Text)
 
     def __repr__(self):
-        return '<Tour \'{}\'>'.format(self.tourname)
+        return '{}'.format(self.name)
 
 
 class Registration(database.Model):

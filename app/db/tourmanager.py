@@ -27,3 +27,12 @@ class TourManager(object):
         tour.description = description
         database.session.add(tour)
         database.session.commit()
+
+    def get_id_list_of_tours_by_date(self, start_date_, end_date_):
+        """
+        Return a list of tours name, and id tuple.
+        :param start_date_: start date of query
+        :param end_date_: end date of query
+        :return: tuple list of name, and id
+        """
+        return database.session.query(Tour, "id").filter(Tour.start_datetime.between(start_date_, end_date_)).all()
