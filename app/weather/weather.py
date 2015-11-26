@@ -1,47 +1,35 @@
 import requests
 
 
-def get_dailyweather(d):
-    """
-    Az OpenWeatherMap API által nyújtott JSON fájlból kinyeri egy NAP időjárását.
-    :param d: egy napot reprezentáló dictionary
-    :return: egy tuple, ami a következőkből áll temp dictionary, pressure, humidity, main weather
-    """""
-    return d["temp"], d["pressure"], d["humidity"], d["weather"][0]["main"]
-
-
-def get_dailyweathers(d):
-    """
-    Az OpenWeatherMap API által nyújtott JSON fájlból kinyeri a napok időjárását.
-    :param d: több napot reprezentáló dictionary
-    :return: egy lista, ami naponkénti időjárás információkat tartalmaz
-    """
-    result = []
-    for day in d["list"]:
-        result.append(get_dailyweather(day))
-    return result
-
-
 class Weather(object):
-    _apikey = 'cb2c8163bbd84861b2604df05eaaddf9'
+    def __init__(self, d):
+        self.morn_temp = d["temp"]["morn"]
+        self.day_temp = d["temp"]["day"]
+        self.eve_temp = d["temp"]["eve"]
+        self.night_temp = d["temp"]["night"]
+        self.min_temp = d["temp"]["min"]
+        self.max_temp = d["temp"]["max"]
+        self.humidity = d["humidity"]
+        self.main_weather = d["weather"][0]["main"]
+        self.pressure = d["pressure"]
+        self.clouds = d["clouds"]
+        self.wind_speed = d["speed"]
+        self.wind_degrees = d["deg"]
 
-    def __init__(self, city, day):
-        self.city = city
-        self.number_of_day = day
-        self.get_weather()
-
-    def get_weather(self):
-        response = requests.get(
-            "http://api.openweathermap.org/data/2.5/forecast/daily?q={city}&cnt={days}&APPID={apikey}".format(
-                city=self.city, days=self.number_of_day, apikey=Weather._apikey))
-        data = response.json()
-        return get_dailyweathers(data)
-
-
-def main():
-    w = Weather('Debrecen', 14)
-    print(w.get_weather())
-
-
-if __name__ == "__main__":
-    main()
+    def __str__(self):
+        return "Main weather: {mw}\n" \
+               "Temperature: morning: {m} day: {d} eve: {e} night: {n} min: {min} max: {max}\n" \
+               "Humidity: {h}\nPressure: {p}\nClouds: {c}\n" \
+               "Wind speed: {ws}\nWind degrees {wd}\n".format(
+                                                            mw=self.main_weather,
+                                                            m=self.morn_temp,
+                                                            d=self.day_temp,
+                                                            e=self.eve_temp,
+                                                            n=self.night_temp,
+                                                            min=self.min_temp,
+                                                            max=self.max_temp,
+                                                            h=self.humidity,
+                                                            p=self.pressure,
+                                                            c=self.clouds,
+                                                            ws=self.wind_speed,
+                                                            wd=self.wind_degrees)
