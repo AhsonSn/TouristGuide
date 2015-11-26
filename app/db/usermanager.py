@@ -2,7 +2,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import database
 from .formextractor import FormExtractor
 from .models import User, Role
-from .experiencemanager import ExperienceManager
 from app.basic.models import UploadManager
 from sqlalchemy import update
 

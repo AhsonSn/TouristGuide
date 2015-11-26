@@ -50,5 +50,15 @@ class DBManagerTest(unittest.TestCase):
         usr = self.instance.User.get_user_with_name("test")
         self.assertEquals(usr.experience_id, 4)
 
+    def test_get_list_of_Tour(self):
+        l = self.instance.Tour.get_id_list_of_tours_by_date("2015-12-01", "2016-04-01")
+        for x in l:
+            print(x)
+        self.assertEquals(True, True)
+
+    def test_get_registration_by_tour_id(self):
+        print(self.instance.Registration.get_registration_count_by_tour_id(1))
+        self.assertEquals(True, True)
+
 if __name__ == '__main__':
     unittest.main()
