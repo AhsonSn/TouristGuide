@@ -80,6 +80,14 @@ class UserManager(object):
         return None
 
     def update_pwd(self, username_, oldpwd, newpwd):
+        """
+        Update the password of user.
+
+        :param username_: username of user
+        :param oldpwd: old password of username
+        :param newpwd: new password of username
+        :return: True if it was updated
+        """
         act_user = self.get_user_with_name(username_)
 
         if act_user is not None \
