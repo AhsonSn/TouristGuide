@@ -7,10 +7,10 @@ from .registrationmanager import RegistrationManager
 class DBFactory(object):
 
     def __init__(self):
-        self.User = UserManager()
         self.Tour = TourManager()
         self.Experience = ExperienceManager()
         self.Registration = RegistrationManager()
+        self.User = UserManager(self.Experience)
 
     # Private member, please use get_instance.
     __instance = None

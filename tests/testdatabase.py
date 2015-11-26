@@ -35,5 +35,20 @@ class DBManagerTest(unittest.TestCase):
         usr = self.instance.User.get_user_with_name("test")
         self.assertEquals(True, check_password_hash(usr.password, "test1"))
 
+    def test_update_src(self):
+        self.instance.User.update_avatar("test", "kep.jpg")
+        usr = self.instance.User.get_user_with_name("test")
+        self.assertEquals(usr.avatar_src, "kep.jpg")
+
+    def test_update_email(self):
+        self.instance.User.update_email("test", "mukodik@test.net")
+        usr = self.instance.User.get_user_with_name("test")
+        self.assertEquals(usr.email, "mukodik@test.net")
+
+    def test_update_experience_by_user(self):
+        self.instance.User.update_experience("test", "Nehéz")
+        usr = self.instance.User.get_user_with_name("test")
+        self.assertEquals(usr.experience_id, 4)
+
 if __name__ == '__main__':
     unittest.main()
