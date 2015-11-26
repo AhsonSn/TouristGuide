@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template
-from werkzeug.security import check_password_hash
-
+from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask_login import login_user, logout_user, login_required
 from .forms import LoginForm, RegisterForm
 from ..basic.models import sidebar_items
 from ..db.dbfactory import DBFactory
@@ -15,16 +14,24 @@ def login():
     if login_form.validate_on_submit():
         instance = DBFactory.get_instance()
         user = instance.User.get_user_by_name(login_form)
-        if user is None:
-            return 'Username not found'
+        remember_me = login_form.remember_me.data
 
-        if check_password_hash(user.password, login_form.pwd.data):
-            return 'Success'
+        if login_user(user, remember_me):
+            flash('Logged in successfully.')
         else:
-            return 'Bad password'
+            flash('Unable to log in.')
+
+        return redirect(url_for('basic.home'))
 
     return render_template('login.html', login_form=login_form,
                            sidebar_items=sidebar_items)
+
+
+@users.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('basic.home'))
 
 
 @users.route('/register', methods=('GET', 'POST'))

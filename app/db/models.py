@@ -1,4 +1,6 @@
 from app import database
+from app import loginmanager
+from flask_login import UserMixin
 
 
 class Role(database.Model):
@@ -38,7 +40,7 @@ class Experience(database.Model):
         return '<Experience \'{}\', id: {}>'.format(self.name, self.id)
 
 
-class User(database.Model):
+class User(UserMixin, database.Model):
     def __init__(self, name, pwd, email_):
         self.username = name
         self.password = pwd
@@ -73,6 +75,11 @@ class User(database.Model):
 
     def __repr__(self):
         return '<User \'{}\'>'.format(self.username)
+
+
+@loginmanager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class Tour(database.Model):

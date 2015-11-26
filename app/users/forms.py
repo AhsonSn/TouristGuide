@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, EqualTo, Email, Regexp, Optional
 from flask_wtf.file import FileField
@@ -17,6 +17,7 @@ class LoginForm(Form):
         u'Jelszó',
         validators=[DataRequired(u'Adj meg egy jelszót!')]
     )
+    remember_me = BooleanField('Jegyezzen meg')
     submit = SubmitField(u'Belépés')
 
 
