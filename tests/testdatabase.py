@@ -60,5 +60,10 @@ class DBManagerTest(unittest.TestCase):
         print(self.instance.Registration.get_registration_count_by_tour_id(1))
         self.assertEquals(True, True)
 
+    def test_ordered_list_from_tour_registrations(self):
+        print("Ordered list: ")
+        print(self.instance.Statistic.get_tours("2016-09-01", "2016-10-01"))
+        self.assertEquals(True, True)
+
 if __name__ == '__main__':
     unittest.main()
