@@ -65,5 +65,15 @@ class DBManagerTest(unittest.TestCase):
         print(self.instance.Statistic.get_tours("2016-09-01", "2016-10-01"))
         self.assertEquals(True, True)
 
+    def test_ordered_list_from_tour_guide_tours(self):
+        print("Statistic2 list: ")
+        print(self.instance.Statistic.get_static_from_tour_guide("2015-09-01", "2016-10-01"))
+        self.assertEquals(True, True)
+
+    def test_ordered_list_from_tour_guide_tours_popularity(self):
+        print("Statistic3 list: ")
+        print(self.instance.Statistic.get_static_from_tour_guide_popularity("2015-09-01", "2016-10-01"))
+        self.assertEquals(True, True)
+
 if __name__ == '__main__':
     unittest.main()
