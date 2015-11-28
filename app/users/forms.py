@@ -57,7 +57,7 @@ class RegisterForm(Form):
     )
 
     experience = SelectField(
-        'Tapasztalati szint (saját bevallás alapján)',
+        u'Tapasztalati szint (saját bevallás alapján)',
         coerce=int
     )
 
