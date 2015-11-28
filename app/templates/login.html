@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Title of Login Page{% endblock %}
 {% block page_content %}
-<div class="col-md-5 col-md-offset-3">
+<div class="form-signin">
   <h2 class="page-header">Bejelentkezés</h2>
-  <form action="" class="form" method="post" role="form">
+  <form action="" method="post" role="form">
     {% import "bootstrap/wtf.html" as wtf %}
     {{ wtf.form_field(login_form.name) }}
     {{ wtf.form_field(login_form.pwd) }}
     {{ wtf.form_field(login_form.remember_me) }}
     {{ login_form.hidden_tag() }}
     <div class="form-group">
-        {{ login_form.submit(class="btn btn-primary") }}
+        {{ login_form.submit(class="btn btn-primary btn-lg btn-block") }}
     </div>
   </form>
   <div class="alert {{ 'alert-danger' if error else 'alert-info' }}" role="alert">

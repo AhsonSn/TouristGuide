@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Regisztráció{% endblock %}
 {% block page_content %}
-<div class="col-md-5 col-md-offset-3">
+<div class="form-signin">
   <h2 class="page-header">Regisztráció</h2>
   <form action="" class="form" method="post" role="form" enctype="multipart/form-data">
     {% import "bootstrap/wtf.html" as wtf %}
@@ -19,7 +19,7 @@
     </div>
     {{ register_form.hidden_tag() }}
     <div class="form-group">
-      {{ register_form.submit(class="btn btn-primary") }}
+      {{ register_form.submit(class="btn btn-primary btn-lg btn-block") }}
     </div>
   </form>
 
