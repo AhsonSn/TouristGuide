@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField, BooleanField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, SelectField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, EqualTo, Email, Regexp, Optional
 from flask_wtf.file import FileField
@@ -54,6 +54,11 @@ class RegisterForm(Form):
     fullName = StringField(
         u'Teljes név',
         validators=[DataRequired(u'Add meg a teljes nevedet!')]
+    )
+
+    experience = SelectField(
+        'Tapasztalati szint (saját bevallás alapján)',
+        coerce=int
     )
 
     birthDate = DateField(
