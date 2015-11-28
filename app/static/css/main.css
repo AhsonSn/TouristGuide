@@ -50,3 +50,16 @@ body {
 .main .page-header {
   margin-top: 0;
 }
+
+.form-signin {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.tour-caption {
+  min-height: 60px;
+}
+
+.order-chooser {
+  padding-bottom: 20px;
+}
