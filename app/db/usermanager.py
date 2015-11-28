@@ -46,6 +46,8 @@ class UserManager(object):
         database.session.commit()
         return True
 
+    def get_user_by_id(self, id_):
+        return User.query.filter_by(id=id_).first()
 
     def get_user_with_name(self, name):
         """

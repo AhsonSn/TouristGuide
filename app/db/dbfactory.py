@@ -11,7 +11,7 @@ class DBFactory(object):
         self.Experience = ExperienceManager()
         self.Registration = RegistrationManager()
         self.User = UserManager(self.Experience)
-        self.Statistic = StatisticManager(self.Registration, self.Tour)
+        self.Statistic = StatisticManager(self.Registration, self.Tour, self.User)
 
     # Private member, please use get_instance.
     __instance = None
