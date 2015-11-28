@@ -14,17 +14,19 @@ def login():
     if login_form.validate_on_submit():
         instance = DBFactory.get_instance()
         user = instance.User.get_user_by_name(login_form)
+
+        if not user:
+            return render_template('login.html', login_form=login_form,
+                                   sidebar_items=sidebar_items, error=True)
+
         remember_me = login_form.remember_me.data
 
-        if login_user(user, remember_me):
-            flash('Logged in successfully.')
-        else:
-            flash('Unable to log in.')
+        login_user(user, remember_me)
 
-        return redirect(url_for('basic.home'))
+        return redirect(url_for('basic.tours'))
 
     return render_template('login.html', login_form=login_form,
-                           sidebar_items=sidebar_items)
+                           sidebar_items=sidebar_items, error=False)
 
 
 @users.route('/logout')

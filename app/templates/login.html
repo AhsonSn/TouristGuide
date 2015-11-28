@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Title of Login Page{% endblock %}
 {% block page_content %}
-<h1 class="page-header">Bejelentkezés</h1>
-<form action="" class="form" method="post" role="form">
+<div class="col-md-5 col-md-offset-3">
+  <h2 class="page-header">Bejelentkezés</h2>
+  <form action="" class="form" method="post" role="form">
     {% import "bootstrap/wtf.html" as wtf %}
     {{ wtf.form_field(login_form.name) }}
     {{ wtf.form_field(login_form.pwd) }}
@@ -11,9 +12,10 @@
     <div class="form-group">
         {{ login_form.submit(class="btn btn-primary") }}
     </div>
-</form>
-<div class="alert alert-info" role="alert">
-    Új felhasználó vagy?
-  <a href="{{ url_for('users.register') }}" class="alert-link">Regisztrálj most!</a>
+  </form>
+  <div class="alert {{ 'alert-danger' if error else 'alert-info' }}" role="alert">
+      {{ 'Nincs ilyen felhasználó!' if error else 'Új felhasználó vagy?' }}
+    <a href="{{ url_for('users.register') }}" class="alert-link">Regisztrálj most!</a>
+  </div>
 </div>
 {% endblock %}
