@@ -3,17 +3,19 @@ from .models import Experience
 
 class ExperienceManager(object):
 
-    def get_experiences(self):
+    @staticmethod
+    def get_experiences():
         """
-        Return a list of Experience from database.
-        :return: list of Experience
+        Return a list of Experiences from database.
+        :return: list of Experiences
         """
         return Experience.query.all()
 
-    def get_experience_by_name(self, name_):
+    @staticmethod
+    def get_experience_by_name(name_):
         """
-        Return the id of experience
-        :param name: name of experience
+        Return the id of an experience
+        :param name_: name of experience
         :return: experience id
         """
 
