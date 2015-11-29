@@ -25,7 +25,7 @@ def login():
 
         login_user(user, remember_me)
 
-        return redirect(url_for('tours.tours'))
+        return redirect(url_for('tours.tours_default'))
 
     return render_template('login.html', login_form=login_form,
                            sidebar_items=sidebar_items, error=False)
