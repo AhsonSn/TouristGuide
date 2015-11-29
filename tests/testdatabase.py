@@ -3,7 +3,7 @@ import unittest
 
 from app import create_app
 from app.db.dbfactory import DBFactory
-from app.db.models import Experience
+from app.db.models import Experience, Tour
 from werkzeug.security import check_password_hash
 
 
@@ -18,8 +18,8 @@ class DBManagerTest(unittest.TestCase):
         self.app_context.pop()
 
     def test_get_experiences(self):
-        l = [Experience(1, "Könnyű"), Experience(2, "Közepes"),
-             Experience(3, "Közepesen nehéz"), Experience(4, "Nehéz")]
+        l = [Experience(1, "Kezdő"), Experience(2, "Középhaladó"),
+             Experience(3, "Haladó"), Experience(4, "Profi")]
         self.assertEquals(self.instance.Experience.get_experiences(), l)
 
     def test_get_users_by_role(self):
@@ -46,7 +46,7 @@ class DBManagerTest(unittest.TestCase):
         self.assertEquals(usr.email, "mukodik@test.net")
 
     def test_update_experience_by_user(self):
-        self.instance.User.update_experience("test", "Nehéz")
+        self.instance.User.update_experience("test", "Profi")
         usr = self.instance.User.get_user_with_name("test")
         self.assertEquals(usr.experience_id, 4)
 
@@ -74,6 +74,22 @@ class DBManagerTest(unittest.TestCase):
         print("Statistic3 list: ")
         print(self.instance.Statistic.get_static_from_tour_guide_popularity("2015-09-01", "2016-10-01"))
         self.assertEquals(True, True)
+
+    def test_delay_tour(self):
+        print(self.instance.Tour.delay_tour(1, "2016-09-01 00:00", "2016-10-01 00:00"))
+        self.assertEquals(True, True)
+
+    def test_delete_tour(self):
+        print(self.instance.Tour.delete_tour(2))
+        self.assertEquals(True, True)
+
+    def test_setPrice(self):
+        t = Tour("ABC", 3, 2)
+        t.id = 1
+        t.price = 3000
+        l = [t]
+        self.assertEquals(self.instance.Tour.set_prices(l), True)
+
 
 if __name__ == '__main__':
     unittest.main()

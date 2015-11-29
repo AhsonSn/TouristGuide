@@ -72,6 +72,7 @@ class User(UserMixin, database.Model):
 
     email = database.Column(database.String(100), nullable=False)
     phone = database.Column(database.String(11))
+    allowance = database.Column(database.Integer)
 
     def __repr__(self):
         return '<User \'{}\'>'.format(self.username)
@@ -92,6 +93,7 @@ class Tour(database.Model):
 
     id = database.Column(database.Integer, primary_key=True)
     name = database.Column(database.String(64), unique=True, index=True)
+    place = database.Column(database.String(64))
     start_datetime = database.Column(database.DateTime)
     end_datetime = database.Column(database.DateTime)
     images = database.Column(database.Text)
@@ -113,6 +115,8 @@ class Tour(database.Model):
     )
 
     description = database.Column(database.Text)
+
+    price = database.Column(database.Integer)
 
     def __repr__(self):
         return '{}'.format(self.name)
@@ -144,3 +148,20 @@ class Registration(database.Model):
 
     def __repr__(self):
         return '<Registration \'{}\'>'.format(self.id)
+
+
+class Message(database.Model):
+    __tablename__ = 'message'
+
+    id = database.Column(database.Integer, primary_key=True)
+
+    from_id = database.Column(database.Integer, database.ForeignKey('users.id'))
+
+    from_table = database.relationship(
+        'User', backref=database.backref('message', lazy='dynamic')
+    )
+
+    date = database.Column(database.DateTime, nullable=False)
+
+    def __repr__(self):
+        return '<Message \'{}\'>'.format(self.id)

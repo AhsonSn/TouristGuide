@@ -157,3 +157,14 @@ class UserManager(object):
 
         return False
 
+    @staticmethod
+    def set_allowance(list_of_user):
+        for user in list_of_user:
+            up = update(User).where(User.id == user.id).values(allowance=user.allowance)
+            database.session.execute(up)
+            database.session.commit()
+
+        return True
+
+
+

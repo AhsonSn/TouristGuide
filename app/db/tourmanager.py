@@ -1,6 +1,9 @@
 from .models import Tour
 from datetime import datetime
 from app import database
+from .registrationmanager import RegistrationManager
+from sqlalchemy import update
+
 
 
 class TourManager(object):
@@ -66,3 +69,35 @@ class TourManager(object):
             order = Tour.experience_id
 
         return Tour.query.order_by(order).paginate(current_page, per_page=per_page)
+
+    @staticmethod
+    def delete_tour(tour_id):
+        """
+        Delete tour by id.
+        :param tour_id: id of tour.
+        :return: list of registered user's email.
+        """
+        l = RegistrationManager.get_tour_users_email(tour_id)
+        RegistrationManager.delete_tour(tour_id)
+
+        Tour.query.filter_by(id=tour_id).delete()
+        database.session.commit()
+        return l
+
+    @staticmethod
+    def delay_tour(tour_id, start_date_, end_date_):
+        up = update(Tour).where(Tour.id == tour_id).values(start_datetime= \
+                            datetime.strptime(start_date_, "%Y-%m-%d %H:%M"), end_datetime=datetime.strptime(end_date_, "%Y-%m-%d %H:%M"))
+        database.session.execute(up)
+        database.session.commit()
+
+        return RegistrationManager.get_tour_users_email(tour_id)
+
+    @staticmethod
+    def set_prices(list_of_tour):
+        for tour in list_of_tour:
+            up = update(Tour).where(Tour.id == tour.id).values(price=tour.price)
+            database.session.execute(up)
+            database.session.commit()
+
+        return True
