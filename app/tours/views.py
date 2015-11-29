@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for
+
+from .forms import TourForm
 from ..basic.models import sidebar_items
 from ..db.tourmanager import TourManager
-from .forms import TourForm
 
 tours_blueprint = Blueprint('tours', __name__)
 tours_blueprint.current_items_per_page = None
@@ -18,7 +19,8 @@ def tours(current_page):
     tour_form = TourForm()
 
     if not tours_blueprint.current_items_per_page:
-        tours_blueprint.current_items_per_page = tour_form.tours_per_page.default
+        tours_blueprint.current_items_per_page = \
+            tour_form.tours_per_page.default
 
     if not tours_blueprint.current_order_by:
         tours_blueprint.current_order_by = tour_form.order_by.default
@@ -28,9 +30,12 @@ def tours(current_page):
         tours_blueprint.current_order_by = tour_form.order_by.data
 
     pagination = TourManager.get_page_of_tours(
-        current_page, tours_blueprint.current_items_per_page, tours_blueprint.current_order_by
+        current_page, tours_blueprint.current_items_per_page,
+        tours_blueprint.current_order_by
     )
 
-    return render_template('tours.html', sidebar_items=sidebar_items, tour_form=tour_form,
-                           tours=pagination.items, pagination=pagination, items=tours_blueprint.current_items_per_page,
+    return render_template('tours.html', sidebar_items=sidebar_items,
+                           tour_form=tour_form,
+                           tours=pagination.items, pagination=pagination,
+                           items=tours_blueprint.current_items_per_page,
                            sort=tours_blueprint.current_order_by)
