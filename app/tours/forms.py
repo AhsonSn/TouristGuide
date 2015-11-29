@@ -9,13 +9,15 @@ class TourForm(Form):
     order_by = SelectField(
         u'Rendezés',
         choices=[(1, 'Dátum'), (2, 'ABC'), (3, 'Tapasztalati szint')],
-        coerce=int
+        coerce=int,
+        default=1
     )
 
     tours_per_page = SelectField(
         u'Túrák oldalanként',
         choices=[(12, 12), (24, 24), (36, 36), (48, 48), (60, 60)],
-        coerce=int
+        coerce=int,
+        default=12
     )
 
     submit = SubmitField(u'Mehet')

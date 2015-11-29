@@ -49,9 +49,10 @@ class TourManager(object):
         return database.session.query(Tour).filter(Tour.start_datetime.between(start_date_, end_date_)).all()
 
     @staticmethod
-    def get_list_of_tours(per_page, order_by):
+    def get_page_of_tours(current_page, per_page, order_by):
         """
-        Return a list of all tours.
+        Return a page of tours.
+        :param current_page: current_page of query
         :param per_page: items per page
         :param order_by: order by this property
         :return: tuple list of name, and id
@@ -64,4 +65,4 @@ class TourManager(object):
         else:
             order = Tour.experience_id
 
-        return Tour.query.order_by(order).limit(per_page).all()
+        return Tour.query.order_by(order).paginate(current_page, per_page=per_page)
