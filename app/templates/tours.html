@@ -5,19 +5,19 @@
 <div class="order-chooser">
   <form action="" class="form-inline" method="post" role="form">
     <div class="form-group ">
-      <label class="control-label" for="{{ tour_form.order_by.label.field_id }}">{{ tour_form.order_by.label.text }}</label>
+      <label class="control-label" for="{{ tour_form.order_by.label.field_id }}">{{ tour_form.order_by.label.text | e }}</label>
       <select class="form-control" id="{{ tour_form.order_by.label.field_id }}" name="{{ tour_form.order_by.label.field_id }}">
         {% for option in tour_form.order_by -%}
-        <option value="{{ option.data }}"{{ ' selected' if option.data == sort }}>{{ option.label.text }}</option>
+        <option value="{{ option.data }}"{{ ' selected' if option.data == sort }}>{{ option.label.text | e }}</option>
         {% endfor %}
       </select>
     </div>
 
     <div class="form-group">
-      <label class="control-label" for="{{ tour_form.tours_per_page.label.field_id }}">{{ tour_form.tours_per_page.label.text }}</label>
+      <label class="control-label" for="{{ tour_form.tours_per_page.label.field_id }}">{{ tour_form.tours_per_page.label.text | e}}</label>
       <select class="form-control" id="{{ tour_form.tours_per_page.label.field_id }}" name="{{ tour_form.tours_per_page.label.field_id }}">
         {% for option in tour_form.tours_per_page -%}
-        <option value="{{ option.data }}"{{ ' selected' if option.data == items }}>{{ option.label.text }}</option>
+        <option value="{{ option.data }}"{{ ' selected' if option.data == items }}>{{ option.label.text | e}}</option>
         {% endfor %}
       </select>
     </div>
@@ -41,10 +41,12 @@
           <span class="glyphicon glyphicon-eye-open"></span>
           Megnézem
         </a>
+        {% if current_user.is_authenticated %}
         <a href="#" class="btn btn-success btn-block" role="button">
           <span class="glyphicon glyphicon-ok"></span>
           Jelentkezek
         </a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -53,16 +55,16 @@
 </div>
 
 <div class="row">
-  <nav>
-    <ul class="pagination">
-      <li class="disabled"><a href="#"><span>&laquo;</span></a></li>
-      <li class="active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      <li><a href="#"> <span>&raquo;</span></a></li>
-    </ul>
-  </nav>
+    <nav class="text-center">
+      <ul class="pagination pagination-lg">
+        <li class="disabled"><a href="#"><span>&laquo;</span></a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#"> <span>&raquo;</span></a></li>
+      </ul>
+    </nav>
 </div>
 {% endblock page_content%}
