@@ -3,6 +3,7 @@ from .tourmanager import TourManager
 from .experiencemanager import ExperienceManager
 from .registrationmanager import RegistrationManager
 from .statisticmanager import StatisticManager
+from .messagemanager import MessageManager
 
 class DBFactory(object):
 
@@ -12,6 +13,7 @@ class DBFactory(object):
         self.Registration = RegistrationManager()
         self.User = UserManager(self.Experience)
         self.Statistic = StatisticManager(self.Registration, self.Tour, self.User)
+        self.Message = MessageManager()
 
     # Private member, please use get_instance.
     __instance = None
