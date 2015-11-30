@@ -39,3 +39,10 @@ def tours(current_page):
                            tours=pagination.items, pagination=pagination,
                            items=tours_blueprint.current_items_per_page,
                            sort=tours_blueprint.current_order_by)
+
+
+@tours_blueprint.route('/view-tour/<int:tour_id>')
+def view_tour(tour_id):
+    tour = TourManager.get_tour_by_id(tour_id)
+    return render_template('tour-view.html', sidebar_items=sidebar_items,
+                           tour=tour)
