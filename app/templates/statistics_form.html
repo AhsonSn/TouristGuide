@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% set active_page = "statistics" %}
+{% block title %}Statisztikák{% endblock %}
+{% block page_content %}
+<h1 class="page-header">Statisztikák</h1>
+{% import "bootstrap/wtf.html" as wtf %}
+{{ wtf.quick_form(statistics_form) }}
+{% endblock page_content %}

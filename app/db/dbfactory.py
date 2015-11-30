@@ -5,8 +5,8 @@ from .registrationmanager import RegistrationManager
 from .statisticmanager import StatisticManager
 from .messagemanager import MessageManager
 
-class DBFactory(object):
 
+class DBFactory(object):
     def __init__(self):
         self.Tour = TourManager()
         self.Experience = ExperienceManager()
@@ -25,16 +25,3 @@ class DBFactory(object):
             return DBFactory.__instance
 
         return DBFactory.__instance
-
-
-
-
-
-
-
-
-
-
-
-
-
