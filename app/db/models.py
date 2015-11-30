@@ -1,6 +1,7 @@
+from flask_login import UserMixin
+
 from app import database
 from app import loginmanager
-from flask_login import UserMixin
 
 
 class Role(database.Model):
@@ -92,7 +93,7 @@ class Tour(database.Model):
     __tablename__ = 'tours'
 
     id = database.Column(database.Integer, primary_key=True)
-    name = database.Column(database.String(64), unique=True, index=True)
+    name = database.Column(database.String(64), index=True)
     place = database.Column(database.String(64))
     start_datetime = database.Column(database.DateTime)
     end_datetime = database.Column(database.DateTime)

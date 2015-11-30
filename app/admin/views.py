@@ -24,6 +24,6 @@ def edit_tour():
     if edit_tour_form.validate_on_submit():
         return 'Success'
 
-    return render_template('edit-tour.html',
+    return render_template('tour-edit.html',
                            edit_tour_form=edit_tour_form,
                            sidebar_items=sidebar_items)

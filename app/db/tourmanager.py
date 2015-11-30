@@ -1,15 +1,16 @@
-from .models import Tour
 from datetime import datetime
-from app import database
-from .registrationmanager import RegistrationManager
+
 from sqlalchemy import update
 
+from app import database
+from .models import Tour
+from .registrationmanager import RegistrationManager
 
 
 class TourManager(object):
-
     @staticmethod
-    def insert_tour(name, start_date, end_date, exp_id, tg_id, description, images="", dateformat="%Y-%m-%d %H:%M"):
+    def insert_tour(name, start_date, end_date, exp_id, tg_id, description,
+                    images="", dateformat="%Y-%m-%d %H:%M"):
         """
         Insert a new tour into the database. The default date format is yyyy.mm.dd hh:mi, as a string.
         If you want to change it, pass the dateformat parameter.
@@ -39,7 +40,8 @@ class TourManager(object):
         :param end_date_: end date of query
         :return: tuple list of name, and id
         """
-        return database.session.query(Tour, "id").filter(Tour.start_datetime.between(start_date_, end_date_)).all()
+        return database.session.query(Tour, "id").filter(
+            Tour.start_datetime.between(start_date_, end_date_)).all()
 
     @staticmethod
     def get_list_of_tours_by_date(start_date_, end_date_):
@@ -49,7 +51,8 @@ class TourManager(object):
         :param end_date_: end date of query
         :return: tuple list of name, and id
         """
-        return database.session.query(Tour).filter(Tour.start_datetime.between(start_date_, end_date_)).all()
+        return database.session.query(Tour).filter(
+            Tour.start_datetime.between(start_date_, end_date_)).all()
 
     @staticmethod
     def get_page_of_tours(current_page, per_page, order_by):
@@ -68,7 +71,13 @@ class TourManager(object):
         else:
             order = Tour.experience_id
 
-        return Tour.query.order_by(order).paginate(current_page, per_page=per_page)
+        return Tour.query.order_by(order).paginate(
+            current_page, per_page=per_page
+        )
+
+    @staticmethod
+    def get_tour_by_id(tour_id):
+        return Tour.query.get(tour_id)
 
     @staticmethod
     def delete_tour(tour_id):
@@ -86,8 +95,10 @@ class TourManager(object):
 
     @staticmethod
     def delay_tour(tour_id, start_date_, end_date_):
-        up = update(Tour).where(Tour.id == tour_id).values(start_datetime= \
-                            datetime.strptime(start_date_, "%Y-%m-%d %H:%M"), end_datetime=datetime.strptime(end_date_, "%Y-%m-%d %H:%M"))
+        up = update(Tour).where(Tour.id == tour_id).values(
+            start_datetime=datetime.strptime(start_date_, "%Y-%m-%d %H:%M"),
+            end_datetime=datetime.strptime(end_date_, "%Y-%m-%d %H:%M"))
+
         database.session.execute(up)
         database.session.commit()
 
