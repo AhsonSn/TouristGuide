@@ -1,16 +1,20 @@
+import os
 import random
 import string
-import os
+
 from flask import current_app
 
 
 class UploadManager(object):
     @staticmethod
     def upload_avatar(image):
-        filename = generate_random_string(20) + os.path.splitext(image.filename)[1]
-        image.save(os.path.join(current_app.config['AVATAR_UPLOAD_FOLDER'], filename))
-        print("Image uploaded: {}".format(filename))
-        return filename
+        if image.content_type:
+            filename = generate_random_string(20) + \
+                       os.path.splitext(image.filename)[1]
+            image.save(os.path.join(current_app.config['AVATAR_UPLOAD_FOLDER'],
+                                    filename))
+            print("Image uploaded: {}".format(filename))
+            return filename
 
 
 def generate_random_string(length):
