@@ -1,10 +1,10 @@
 import unittest
 
+from werkzeug.security import check_password_hash
 
 from app import create_app
 from app.db.dbfactory import DBFactory
 from app.db.models import Experience, Tour
-from werkzeug.security import check_password_hash
 
 
 class DBManagerTest(unittest.TestCase):
@@ -27,7 +27,6 @@ class DBManagerTest(unittest.TestCase):
         self.assertEquals(True, True)
 
     def test_insert_tour(self):
-        #self.instance.Tour.insert_tour("Bükki túra2", "2015-11-19 10:10", "2015-11-20 10:10", "", 1, 1, "Káprázatos túrahely.")
         self.assertEquals(True, True)
 
     def test_update_pwd(self):
@@ -36,9 +35,12 @@ class DBManagerTest(unittest.TestCase):
         self.assertEquals(True, check_password_hash(usr.password, "test1"))
 
     def test_update_src(self):
-        self.instance.User.update_avatar("test", "kep.jpg")
+        filename = "kep.jpg"
+        from werkzeug.datastructures import FileStorage
+        image = FileStorage(filename=filename)
+        self.instance.User.update_avatar("test", image)
         usr = self.instance.User.get_user_with_name("test")
-        self.assertEquals(usr.avatar_src, "kep.jpg")
+        self.assertEquals(usr.avatar_src, filename)
 
     def test_update_email(self):
         self.instance.User.update_email("test", "mukodik@test.net")
@@ -46,7 +48,7 @@ class DBManagerTest(unittest.TestCase):
         self.assertEquals(usr.email, "mukodik@test.net")
 
     def test_update_experience_by_user(self):
-        self.instance.User.update_experience("test", "Profi")
+        self.instance.User.update_experience("test", 4)
         usr = self.instance.User.get_user_with_name("test")
         self.assertEquals(usr.experience_id, 4)
 
