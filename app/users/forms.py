@@ -1,8 +1,9 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, SelectField
+from flask_wtf.file import FileField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, \
+    SelectField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, EqualTo, Email, Regexp, Optional
-from flask_wtf.file import FileField
 
 
 class LoginForm(Form):
@@ -68,7 +69,8 @@ class RegisterForm(Form):
 
     phoneNumber = StringField(
         u'Telefonszám',
-        validators=[Optional(), Regexp("[0-9]{11}", message="Add meg a telefonszámodat!")]
+        validators=[Optional(),
+                    Regexp("[0-9]{11}", message="Add meg a telefonszámodat!")]
     )
 
     avatar = FileField(
@@ -76,3 +78,49 @@ class RegisterForm(Form):
     )
 
     submit = SubmitField(u'Regisztráció')
+
+
+class SettingsForm(Form):
+    def generate_csrf_token(self, csrf_context=None):
+        return super(SettingsForm, self).generate_csrf_token(csrf_context)
+
+    name = StringField(
+        u'Felhasználónév',
+        validators=[DataRequired(u'Adj meg egy felhasználónevet!')]
+    )
+
+    new_pwd = PasswordField(
+        u'új jelszó'
+    )
+
+    old_pwd = PasswordField(
+        u'Jelenlegi jelszavad',
+        validators=[
+            DataRequired(u'Add meg a jelszavad a beállítások módosításához!')
+        ]
+    )
+
+    email = StringField(
+        u'E-mail cím',
+        validators=[
+            DataRequired(u'Adj meg egy email címet!'),
+            Email(u'Érvénytelen email cím!')
+        ]
+    )
+
+    experience = SelectField(
+        u'Tapasztalati szint (saját bevallás alapján)',
+        coerce=int
+    )
+
+    phoneNumber = StringField(
+        u'Telefonszám',
+        validators=[Optional(),
+                    Regexp("[0-9]{11}", message="Érvénytelen telefonszám!")]
+    )
+
+    avatar = FileField(
+        u'Profilkép'
+    )
+
+    submit = SubmitField(u'Beállítások mentése')
