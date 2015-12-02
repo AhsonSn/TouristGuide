@@ -1,16 +1,15 @@
-from werkzeug.security import generate_password_hash, check_password_hash
-from app import database
+from sqlalchemy import update
+from werkzeug.security import generate_password_hash
+
 from .formextractor import FormExtractor
 from .models import User, Role
-from app.basic.models import UploadManager
-from sqlalchemy import update
+from .. import database
+from ..basic.models import UploadManager
 
 
 class UserManager(object):
-    def __init__(self, experience):
-        self.exp = experience
-
-    def insert_user(self, form, experience_id=1, account_type_id=3):
+    @staticmethod
+    def insert_user(form, experience_id=1, account_type_id=3):
         """
         Inserts a user to database, from the registration form.
 
@@ -38,18 +37,20 @@ class UserManager(object):
         else:
             user.avatar_src = None
 
-        if self.get_user_with_name(extr["name"]) is not None \
-                or self.get_user_by_email(extr["email"]) is not None:
+        if UserManager.get_user_with_name(extr["name"]) is not None \
+                or UserManager.get_user_by_email(extr["email"]) is not None:
             return False
 
         database.session.add(user)
         database.session.commit()
         return True
 
-    def get_user_by_id(self, id_):
-        return User.query.filter_by(id=id_).first()
+    @staticmethod
+    def get_user_by_id(id_):
+        return User.query.get(id_)
 
-    def get_user_with_name(self, name):
+    @staticmethod
+    def get_user_with_name(name):
         """
         Return a User instance where username is equal name.
 
@@ -58,11 +59,13 @@ class UserManager(object):
         """
         return User.query.filter_by(username=name).first()
 
-    def get_user_by_name(self, form):
-        dict = FormExtractor.extract(form)
-        return self.get_user_with_name(dict["name"])
+    @staticmethod
+    def get_user_by_name(form):
+        return UserManager.get_user_with_name(
+            FormExtractor.extract(form)["name"])
 
-    def get_user_by_email(self, email_):
+    @staticmethod
+    def get_user_by_email(email_):
         """
         Return a User instance where email is equal email.
         :param email_: Users emails
@@ -70,7 +73,8 @@ class UserManager(object):
         """
         return User.query.filter_by(email=email_).first()
 
-    def get_user_by_role(self, role_name):
+    @staticmethod
+    def get_user_by_role(role_name):
         """
         Return a list of user, who's account type is role_name.
         :param role_name: Account_type_name
@@ -84,73 +88,116 @@ class UserManager(object):
 
         return None
 
-    def update_pwd(self, username_, oldpwd, newpwd):
+    @staticmethod
+    def update_username(id_, new_username):
+        """
+        Update the password of user.
+
+        :param id_: id of user
+        :param new_username: new username
+        :return: True if it was updated
+        """
+        act_user = User.query.get(id_)
+
+        if act_user is not None:
+            up = update(User).where(User.id == id_).values(
+                username=new_username
+            )
+            database.session.execute(up)
+            database.session.commit()
+            return True
+
+        return False
+
+    @staticmethod
+    def update_pwd(username_, newpwd):
         """
         Update the password of user.
 
         :param username_: username of user
-        :param oldpwd: old password of username
         :param newpwd: new password of username
         :return: True if it was updated
         """
-        act_user = self.get_user_with_name(username_)
+        act_user = UserManager.get_user_with_name(username_)
 
-        if act_user is not None \
-                and check_password_hash(act_user.password, oldpwd):
-            up = update(User).where(User.username == username_)\
-                .values(password=generate_password_hash(newpwd))
+        if act_user:
+            up = update(User).where(
+                User.username == username_).values(
+                password=generate_password_hash(newpwd)
+            )
             database.session.execute(up)
             database.session.commit()
             return True
 
         return False
 
-    def update_avatar(self, username_, src):
+    @staticmethod
+    def update_phone(username_, phonenumber):
+        act_user = UserManager.get_user_with_name(username_)
+
+        if act_user:
+            up = update(User).where(User.username == username_).values(
+                phone=phonenumber
+            )
+            database.session.execute(up)
+            database.session.commit()
+            return True
+
+        return False
+
+    @staticmethod
+    def update_avatar(username_, image):
         """
         Update avatar by user name.
         :param username_: username of user
-        :param src: new src of user avatar image
+        :param image: new user avatar image
         :return: True if update was succeed.
         """
-        act_user = self.get_user_with_name(username_)
+        act_user = UserManager.get_user_with_name(username_)
 
-        if act_user is not None:
-            up = update(User).where(User.username == username_).values(avatar_src=src)
+        if act_user:
+            filename = UploadManager.upload_avatar(image)
+            up = update(User).where(User.username == username_).values(
+                avatar_src=filename)
             database.session.execute(up)
             database.session.commit()
             return True
 
         return False
 
-    def update_email(self, username_, email):
+    @staticmethod
+    def update_email(username_, email):
         """
         Update email by username.
         :param username_: username of user
         :param email: new email of user
         :return: True if update was succeed
         """
-        act_user = self.get_user_with_name(username_)
+        act_user = UserManager.get_user_with_name(username_)
 
         if act_user is not None:
-            up = update(User).where(User.username == username_).values(email=email)
+            up = update(User).where(User.username == username_).values(
+                email=email)
             database.session.execute(up)
             database.session.commit()
             return True
 
         return False
 
-    def update_experience(self, username_, exp_):
+    @staticmethod
+    def update_experience(username_, exp_):
         """
         Update experience of username.
         :param username_: username of user
-        :param exp_: experience name
+        :param exp_: experience id
         :return: True if update was succeed
         """
-        act_user = self.get_user_with_name(username_)
-        exp = self.exp.get_experience_by_name(exp_)
+        act_user = UserManager.get_user_with_name(username_)
 
-        if act_user is not None and exp is not None:
-            up = update(User).where(User.username == username_).values(experience_id=exp)
+        if act_user:
+            up = update(User).where(User.username == username_).values(
+                experience_id=exp_
+            )
             database.session.execute(up)
             database.session.commit()
             return True
@@ -160,11 +207,9 @@ class UserManager(object):
     @staticmethod
     def set_allowance(list_of_user):
         for user in list_of_user:
-            up = update(User).where(User.id == user.id).values(allowance=user.allowance)
+            up = update(User).where(User.id == user.id).values(
+                allowance=user.allowance)
             database.session.execute(up)
             database.session.commit()
 
         return True
-
-
-
