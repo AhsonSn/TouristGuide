@@ -1,5 +1,6 @@
 from flask_wtf import Form
-from wtforms import StringField, TextAreaField, FileField, SubmitField, SelectField
+from wtforms import StringField, TextAreaField, FileField, SubmitField, \
+    SelectField, IntegerField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
 
@@ -28,9 +29,17 @@ class AddTourForm(Form):
         validators=[DataRequired(u'Adj meg legalább 1 képet')]
     )
 
+    experience_id = SelectField(
+        u'Szükséges tapasztalati szint'
+    )
+
     description = TextAreaField(
         u'Túra leírása',
         validators=[DataRequired(u'Add meg a túra leírását!')]
+    )
+
+    price = IntegerField(
+        u'Túra részvételi díja'
     )
 
     submit = SubmitField(u'Túra létrehozása')
@@ -59,8 +68,11 @@ class StatisticsForm(Form):
     )
 
     input_type = SelectField(u'Statisztika típusa',
-                             choices=[('reg_user', 'Regisztrált felhasználók száma szerint'),
-                                      ('guided_tour', 'A túravezetők által vezett túrák száma alapján'),
-                                      ('popularity', 'A túravezetők népszerűsége alapján')])
+                             choices=[('reg_user',
+                                       'Regisztrált felhasználók száma szerint'),
+                                      ('guided_tour',
+                                       'A túravezetők által vezett túrák száma alapján'),
+                                      ('popularity',
+                                       'A túravezetők népszerűsége alapján')])
 
     submit = SubmitField(u'Diagram készítése')
