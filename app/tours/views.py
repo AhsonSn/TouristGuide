@@ -28,6 +28,7 @@ def tours(current_page):
     if tour_form.validate_on_submit():
         tours_blueprint.current_items_per_page = tour_form.tours_per_page.data
         tours_blueprint.current_order_by = tour_form.order_by.data
+        return redirect(url_for('tours.tours_default'))
 
     pagination = TourManager.get_page_of_tours(
         current_page, tours_blueprint.current_items_per_page,
