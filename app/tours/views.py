@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
+from flask_login import login_required, current_user
 
 from .forms import TourForm
 from ..basic.models import sidebar_items
@@ -47,3 +48,13 @@ def view_tour(tour_id):
     tour = TourManager.get_tour_by_id(tour_id)
     return render_template('tour-view.html', sidebar_items=sidebar_items,
                            tour=tour)
+
+
+@tours_blueprint.route('/update-tour-images/<int:id_>/<string>')
+@login_required
+def update_tour_images(id_, string):
+    if current_user.account_type_id == 1:
+        TourManager.update_images(TourManager.get_tour_by_id(id_), string)
+        return '1'
+    else:
+        return u'Hozzáfárás megtagadva'

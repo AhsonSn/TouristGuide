@@ -112,3 +112,10 @@ class TourManager(object):
             database.session.commit()
 
         return True
+
+    @staticmethod
+    def update_images(tour, images):
+        database.session.execute(
+            update(Tour).where(Tour.id == tour.id).values(images=images)
+        )
+        database.session.commit()
