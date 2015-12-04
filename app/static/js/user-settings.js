@@ -1,29 +1,32 @@
 $(document).ready(function ($) {
-  var nameForm = $("#name");
-  nameForm.change(function() {
-    $.get("/username-available/" + nameForm.val(), function(data) {
 
-      if (nameForm.parent().hasClass("has-success has-feedback")) {
-        nameForm.parent().removeClass("has-success has-feedback");
-      }
+    var nameForm = $("#name");
+    var nameFormParent = nameForm.parent();
 
-      if (nameForm.parent().hasClass("has-error has-feedback")) {
-        nameForm.parent().removeClass("has-error has-feedback");
-      }
+    nameForm.change(function() {
+        $.get("/username-available/" + nameForm.val(), function(data) {
 
-      var icon = $("<span></span>");
-      icon.addClass("glyphicon form-control-feedback");
+            if (nameFormParent.hasClass("has-success has-feedback")) {
+                nameFormParent.removeClass("has-success has-feedback");
+            }
 
-      if (data == "1") {
-        nameForm.parent().addClass("has-success has-feedback");
-        icon.addClass("glyphicon-ok");
-      } else {
-        nameForm.parent().addClass("has-error has-feedback");
-        icon.addClass("glyphicon-remove");
-      }
+            if (nameFormParent.hasClass("has-error has-feedback")) {
+                nameFormParent.removeClass("has-error has-feedback");
+            }
 
-      nameForm.parent().children().filter("span").remove();
-      nameForm.parent().append(icon);
+            var icon = $("<span></span>");
+            icon.addClass("glyphicon form-control-feedback");
+
+            if (data == "1") {
+                nameFormParent.addClass("has-success has-feedback");
+                icon.addClass("glyphicon-ok");
+            } else {
+                nameFormParent.addClass("has-error has-feedback");
+                icon.addClass("glyphicon-remove");
+            }
+
+            nameFormParent.children().filter("span").remove();
+            nameFormParent.append(icon);
+        });
     });
-  });
 });
