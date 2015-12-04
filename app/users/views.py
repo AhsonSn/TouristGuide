@@ -6,6 +6,8 @@ from .forms import LoginForm, RegisterForm, SettingsForm
 from ..basic.models import sidebar_items
 from ..db.dbfactory import DBFactory
 from ..db.experiencemanager import ExperienceManager
+from ..db.registrationmanager import RegistrationManager
+from ..db.tourmanager import TourManager
 from ..db.usermanager import UserManager
 
 users = Blueprint('users', __name__)
@@ -125,6 +127,16 @@ def settings():
         'settings.html', settings_form=settings_form,
         sidebar_items=sidebar_items, experience=current_user.experience_id,
         success=None, message='')
+
+
+@users.route('/apply-for-tour/<int:tour_id>')
+@login_required
+def apply_for_tour(tour_id):
+    tour = TourManager.get_tour_by_id(tour_id)
+    success = RegistrationManager.register_user(current_user, tour)
+
+    return render_template(
+        'apply.html', sidebar_items=sidebar_items, tour=tour, success=success)
 
 
 @users.route('/username-available/<username>')
