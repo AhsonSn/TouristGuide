@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 
-from .forms import TourForm
+from .forms import TourForm, SearchTourForm
 from ..basic.models import sidebar_items
 from ..db.tourmanager import TourManager
 
@@ -48,6 +48,36 @@ def view_tour(tour_id):
     tour = TourManager.get_tour_by_id(tour_id)
     return render_template('tour-view.html', sidebar_items=sidebar_items,
                            tour=tour)
+
+
+@tours_blueprint.route('/search-tours', methods=('GET', 'POST'))
+def search_tours():
+    tour_search_form = SearchTourForm()
+
+    if tour_search_form.validate_on_submit():
+
+        place = tour_search_form.place.data
+        date = tour_search_form.date.data
+
+        results = []
+
+        if place and date:
+            results = TourManager.get_list_of_tours_by_place_and_date(
+                place, date)
+        elif place:
+            results = TourManager.get_list_of_tours_by_place(place)
+        elif date:
+            results = TourManager.get_list_of_tours_by_date(date)
+
+        if results:
+            return render_template('tour-search.html',
+                                   sidebar_items=sidebar_items,
+                                   tour_search_form=tour_search_form,
+                                   results=results)
+
+    return render_template('tour-search.html', sidebar_items=sidebar_items,
+                           tour_search_form=tour_search_form,
+                           results=None)
 
 
 @tours_blueprint.route('/update-tour-images/<int:id_>/<string>')

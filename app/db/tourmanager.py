@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import update
+from sqlalchemy import update, func
 
 from app import database
 from .models import Tour
@@ -44,15 +44,38 @@ class TourManager(object):
             Tour.start_datetime.between(start_date_, end_date_)).all()
 
     @staticmethod
-    def get_list_of_tours_by_date(start_date_, end_date_):
+    def get_list_of_tours_by_date(start_date_):
         """
-        Return a list of tours between dates.
+        Return a list of tours whose start date is equal to start_date_.
         :param start_date_: start date of query
-        :param end_date_: end date of query
         :return: tuple list of name, and id
         """
         return database.session.query(Tour).filter(
-            Tour.start_datetime.between(start_date_, end_date_)).all()
+            func.date(Tour.start_datetime) == start_date_).all()
+
+    @staticmethod
+    def get_list_of_tours_by_place(place):
+        """
+        Return a list of tours whose place is equal to place.
+        :param place: start date of query
+        :return: tuple list of name, and id
+        """
+        return database.session.query(Tour).filter(
+            func.lower(Tour.place) == func.lower(place)).all()
+
+    @staticmethod
+    def get_list_of_tours_by_place_and_date(place, date):
+        """
+        Return a list of tours whose place is equal to place and
+        start date is equal to start_date_.
+        :param place: place of tour
+        :param date: start date of query
+        :return: tuple list of name, and id
+        """
+        return database.session.query(Tour).filter(
+            func.lower(Tour.place) == func.lower(place),
+            func.date(Tour.start_datetime) == date
+        ).all()
 
     @staticmethod
     def get_page_of_tours(current_page, per_page, order_by):
