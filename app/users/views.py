@@ -139,6 +139,30 @@ def apply_for_tour(tour_id):
         'apply.html', sidebar_items=sidebar_items, tour=tour, success=success)
 
 
+@users.route('/detach-from-tour/<int:tour_id>')
+@login_required
+def detach_from_tour(tour_id):
+    tour = TourManager.get_tour_by_id(tour_id)
+    RegistrationManager.unregister_user(current_user.id, tour_id)
+
+    return render_template(
+        'detach.html', sidebar_items=sidebar_items, tour=tour)
+
+
+@users.route('/registrations')
+@login_required
+def registrations():
+
+    regs = RegistrationManager.get_registrations_of_user(current_user)
+    results = []
+
+    for reg in regs:
+        results.append(TourManager.get_tour_by_id(reg.tour_id))
+
+    return render_template(
+        'registrations.html', sidebar_items=sidebar_items, results=results)
+
+
 @users.route('/username-available/<username>')
 @login_required
 def username_available(username):

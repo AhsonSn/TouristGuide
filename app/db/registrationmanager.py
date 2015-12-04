@@ -39,4 +39,5 @@ class RegistrationManager(object):
 
     @staticmethod
     def unregister_user(user_id, tour_id):
-        Registration.query.filter_by(user_id=user_id, tour_id=tour_id).delete()
+        Registration.query.filter_by(tour_id=tour_id, user_id=user_id).delete()
+        database.session.commit()
