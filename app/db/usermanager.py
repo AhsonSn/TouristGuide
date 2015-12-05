@@ -89,6 +89,12 @@ class UserManager(object):
         return None
 
     @staticmethod
+    def get_user_by_role_id(role_id):
+        return User.query.filter_by(
+            account_type_id=role_id
+        ).order_by(User.fullname).all()
+
+    @staticmethod
     def update_username(id_, new_username):
         """
         Update the password of user.

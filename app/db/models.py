@@ -22,6 +22,7 @@ class Experience(database.Model):
     """
     Values of this table: Könnyű, Közepes, Közepesen Nehéz, Nehéz
     """
+
     def __init__(self, id_, name_):
         self.id = id_
         self.name = name_
@@ -85,10 +86,15 @@ def load_user(user_id):
 
 
 class Tour(database.Model):
-    def __init__(self, name_, exp_, tg_):
-        self.name = name_
-        self.experience_id = exp_
-        self.tour_guide_id = tg_
+    def __init__(self, data):
+        self.name = data['name']
+        self.place = data['place']
+        self.start_datetime = data['start_date']
+        self.end_datetime = data['end_date']
+        self.experience_id = data['experience']
+        self.tour_guide_id = data['tour_guide']
+        self.description = data['description']
+        self.price = data['price']
 
     __tablename__ = 'tours'
 
@@ -158,17 +164,25 @@ class Registration(database.Model):
 
 
 class Message(database.Model):
-    __tablename__ = 'message'
+    def __init__(self, from_user, message):
+        self.from_user = from_user
+        self.message = message
+
+    __tablename__ = 'messages'
 
     id = database.Column(database.Integer, primary_key=True)
 
-    from_id = database.Column(database.Integer, database.ForeignKey('users.id'))
+    from_user_id = database.Column(
+        database.Integer, database.ForeignKey('users.id'), nullable=False
+    )
 
-    from_table = database.relationship(
+    from_user = database.relationship(
         'User', backref=database.backref('message', lazy='dynamic')
     )
 
     date = database.Column(database.DateTime, nullable=False)
+
+    message = database.Column(database.Text)
 
     def __repr__(self):
         return '<Message \'{}\'>'.format(self.id)

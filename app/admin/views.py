@@ -1,23 +1,42 @@
 from flask import Blueprint, render_template
-from app.statistics.statistics import Statistics
+from flask_login import login_required
+
 from .forms import AddTourForm, EditTourForm, StatisticsForm
 from ..basic.models import sidebar_items
+from ..db.experiencemanager import ExperienceManager
+from ..db.tourmanager import TourManager
+from ..db.usermanager import UserManager
+from ..statistics.statistics import Statistics
 
 admin = Blueprint('admin', __name__)
 
 
 @admin.route('/add-tour', methods=('GET', 'POST'))
+@login_required
+# CEO ONLY
 def add_tour():
     add_tour_form = AddTourForm()
+    add_tour_form.experience.choices = [(e.id, e.name) for e in
+                                        ExperienceManager.get_experiences()]
+
+    add_tour_form.tour_guide.choices = [(guide.id, guide.fullname) for guide in
+                                        UserManager.get_user_by_role_id(4)]
+
+    success = False
+
+    if add_tour_form.validate_on_submit():
+        print(add_tour_form)
+        TourManager.insert_tour(add_tour_form)
+        success = True
 
     return render_template('add-tour.html',
                            add_tour_form=add_tour_form,
                            sidebar_items=sidebar_items,
-                           success=True if add_tour_form.validate_on_submit()
-                           else False)
+                           success=success)
 
 
 @admin.route('/edit-tour', methods=('GET', 'POST'))
+@login_required
 def edit_tour():
     edit_tour_form = EditTourForm()
 

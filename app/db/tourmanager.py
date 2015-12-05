@@ -7,26 +7,15 @@ from .registrationmanager import RegistrationManager
 
 class TourManager(object):
     @staticmethod
-    def insert_tour(name, start_date, end_date, exp_id, tg_id, description,
-                    images="", dateformat="%Y-%m-%d %H:%M"):
+    def insert_tour(form):
         """
         Insert a new tour into the database. The default date format is yyyy.mm.dd hh:mi, as a string.
         If you want to change it, pass the dateformat parameter.
-        :param name: Tour name
-        :param start_date: string of start date time of tour
-        :param end_date: string of end date time of tour
-        :param exp_id: experience id
-        :param tg_id: tour guide id
-        :param description: description of tour
-        :param images: (Optional) tour images src
-        :param dateformat: (Optional) a format string to start and end date.
+        :param form: the form
         """
 
-        tour = Tour(name, exp_id, tg_id)
-        tour.start_datetime = datetime.strptime(start_date, dateformat)
-        tour.end_datetime = datetime.strptime(end_date, dateformat)
-        tour.images = images
-        tour.description = description
+        tour = Tour(form.data)
+        tour.images = ";".join(form.images.raw_data)
         database.session.add(tour)
         database.session.commit()
 
