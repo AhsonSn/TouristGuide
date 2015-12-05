@@ -1,7 +1,5 @@
 from datetime import datetime
-
 from sqlalchemy import update, func
-
 from app import database
 from .models import Tour
 from .registrationmanager import RegistrationManager
@@ -41,6 +39,11 @@ class TourManager(object):
         :return: tuple list of name, and id
         """
         return database.session.query(Tour, "id").filter(
+            Tour.start_datetime.between(start_date_, end_date_)).all()
+
+    @staticmethod
+    def get_list_of_tours_between_dates(start_date_, end_date_):
+        return database.session.query(Tour).filter(
             Tour.start_datetime.between(start_date_, end_date_)).all()
 
     @staticmethod
