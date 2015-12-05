@@ -11,7 +11,7 @@ class Weather(object):
         self.main_weather = d["weather"][0]["main"]
         self.pressure = d["pressure"]
         self.clouds = d["clouds"]
-        self.wind_speed = d["speed"]
+        self.wind_speed = round(d["speed"] * 3.6, 2)
         self.wind_degrees = d["deg"]
 
     def __str__(self):

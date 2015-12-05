@@ -35,18 +35,16 @@ def statistics():
 
     if statistics_form.validate_on_submit():
         stat = Statistics()
-        chart_type = "line_chart"
+        chart_type = "bar_chart"
         if statistics_form.input_type.data == "reg_user":
             (labels, data) = stat.get_stat_by_registered_user(statistics_form.start_date.data,
                                                               statistics_form.end_date.data)
         elif statistics_form.input_type.data == "guided_tour":
             (labels, data) = stat.get_stat_by_tourguide(statistics_form.start_date.data,
                                                         statistics_form.end_date.data)
-            chart_type = "bar_chart"
         elif statistics_form.input_type.data == "popularity":
             (labels, data) = stat.get_stat_by_tourguide_popularity(statistics_form.start_date.data,
                                                                    statistics_form.end_date.data)
-            chart_type = "bar_chart"
         return render_template('statistics.html',
                                statistics_form=statistics_form,
                                sidebar_items=sidebar_items,

@@ -9,48 +9,79 @@
         {% for date in weathers %}
         <th>
             <div class="datum">{{date}}</div>
-       </th>
-         {% endfor %}
+        </th>
+        {% endfor %}
     </tr>
     <tr>
         <td>
-            <div class="napszak">Reggel</div>
+            <div class="sor">Időjárás</div>
         </td>
         {% for date in weathers %}
-        <td>
-            <div class="homerseklet">{{weathers[date].morn_temp}}<sup>°</sup></div>
+        <td class="weather-data">
+            {% if weathers[date].main_weather == 'Rain' %}
+            <img src="{{ url_for('static', filename='WeatherIcons/Rain.png') }}">
+            {% elif weathers[date].main_weather == 'Clear' %}
+            <img src="{{ url_for('static', filename='WeatherIcons/Sun.png') }}">
+            {% elif weathers[date].main_weather == 'Clouds' %}
+            <img src="{{ url_for('static', filename='WeatherIcons/Clouds.png') }}">
+            {% elif weathers[date].main_weather == 'Snow' %}
+            <img src="{{ url_for('static', filename='WeatherIcons/Snow.png') }}">
+            {% endif %}
         </td>
         {% endfor %}
     </tr>
     <tr>
         <td>
-            <div class="napszak">Délután</div>
+            <div class="sor">Minimum hőmérséklet</div>
         </td>
-            {% for date in weathers %}
-        <td>
-            <div class="homerseklet">{{weathers[date].day_temp}}<sup>°</sup></div>
-        </td>
-        {% endfor %}
-    </tr>
-    <tr>
-        <td>
-            <div class="napszak">Este</div>
-        </td>
-            {% for date in weathers %}
-        <td>
-            <div class="homerseklet">{{weathers[date].eve_temp}}<sup>°</sup></div>
+        {% for date in weathers %}
+        <td class="weather-data">
+            <img src="{{ url_for('static', filename='WeatherIcons/Thermometer.png') }}">
+            <div class="homerseklet">{{weathers[date].min_temp}}<sup>°</sup></div>
         </td>
         {% endfor %}
     </tr>
     <tr>
         <td>
-            <div class="napszak">Éjjel</div>
+            <div class="sor">Maximum hőmérséklet</div>
         </td>
-           {% for date in weathers %}
-        <td>
-            <div class="homerseklet">{{weathers[date].night_temp}}<sup>°</sup></div>
+        {% for date in weathers %}
+        <td class="weather-data">
+            <img src="{{ url_for('static', filename='WeatherIcons/Thermometer.png') }}">
+            <div class="homerseklet">{{weathers[date].max_temp}}<sup>°</sup></div>
         </td>
         {% endfor %}
     </tr>
+    <tr>
+        <td>
+            <div class="sor">Szélsebesség</div>
+        </td>
+        {% for date in weathers %}
+        <td class="weather-data">
+           {{weathers[date].wind_speed}}
+        </td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td>
+            <div class="sor">Szélirány</div>
+        </td>
+        {% for date in weathers %}
+        <td class="weather-data">
+           {{weathers[date].wind_degrees}}<sup>°</sup>
+        </td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td>
+            <div class="sor">Páratartalom</div>
+        </td>
+        {% for date in weathers %}
+        <td class="weather-data">
+           {{weathers[date].humidity}}%
+        </td>
+        {% endfor %}
+    </tr>
+
 </table>
 {% endblock page_content%}
