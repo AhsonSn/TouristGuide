@@ -124,6 +124,12 @@ class Tour(database.Model):
 
 
 class Registration(database.Model):
+    def __init__(self, user, tour, date, paid):
+        self.user = user
+        self.tour = tour
+        self.date = date
+        self.isPaid = paid
+
     __tablename__ = 'registrations'
 
     id = database.Column(database.Integer, primary_key=True)

@@ -3,7 +3,8 @@ from .models import Message
 
 class MessageManager(object):
 
-    def get_list(self):
+    @staticmethod
+    def get_list():
         """
         Return all message.
 
@@ -11,7 +12,8 @@ class MessageManager(object):
         """
         return Message.query().all()
 
-    def get_list_between_date(self, start, end):
+    @staticmethod
+    def get_list_between_date(start, end):
         """
         Return all message between date.
 
@@ -21,7 +23,8 @@ class MessageManager(object):
         """
         return Message.query.filter_by(Message.date.between(start, end))
 
-    def get_list_from_date(self, start):
+    @staticmethod
+    def get_list_from_date(start):
         """
         Return all message from date to now.
 

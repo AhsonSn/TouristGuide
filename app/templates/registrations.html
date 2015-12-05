@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}TouristGuide &ndash; Túrajelentkezések{% endblock %}
+{% block page_content %}
+<h3 class="page-header">Túrajelentkezések</h3>
+{% if results %}
+<table class="table table-bordered table-hover">
+  <tr>
+    <th>Dátum</th>
+    <th>Név</th>
+    <th>Jelentkezési díj</th>
+    <th>Túravezető</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  {% for tour in results %}
+  <tr>
+    <td>{{ tour.start_datetime|literal_date }} {{ tour.start_datetime|time }}</td>
+    <td>{{ tour.name }}</td>
+    <td>{{ tour.price }} Ft</td>
+    <td>{{ tour.tour_guide.fullname }}</td>
+    <td style="vertical-align: middle">
+      <a href="{{ url_for('tours.view_tour', tour_id=tour.id) }}" class="btn btn-primary btn-block" role="button">
+        <span class="glyphicon glyphicon-eye-open"></span>
+      </a>
+    </td>
+    <td style="vertical-align: middle">
+      <a href="{{ url_for('users.detach_from_tour', tour_id=tour.id) }}" class="btn btn-danger btn-block" role="button">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+      </a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="alert alert-warning" role="alert">Még nem jelentkeztél egy túrára sem!</div>
+{% endif %}
+
+{% endblock page_content %}

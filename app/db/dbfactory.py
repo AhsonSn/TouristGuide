@@ -1,9 +1,9 @@
-from .usermanager import UserManager
-from .tourmanager import TourManager
 from .experiencemanager import ExperienceManager
+from .messagemanager import MessageManager
 from .registrationmanager import RegistrationManager
 from .statisticmanager import StatisticManager
-from .messagemanager import MessageManager
+from .tourmanager import TourManager
+from .usermanager import UserManager
 
 
 class DBFactory(object):
@@ -11,7 +11,7 @@ class DBFactory(object):
         self.Tour = TourManager()
         self.Experience = ExperienceManager()
         self.Registration = RegistrationManager()
-        self.User = UserManager(self.Experience)
+        self.User = UserManager()
         self.Statistic = StatisticManager(self.Registration, self.Tour, self.User)
         self.Message = MessageManager()
 

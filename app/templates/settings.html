@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}TouristGuide &ndash; Felhasználó beállításai{% endblock %}
+{% block page_content %}
+<div class="form-signin">
+  <h2 class="page-header">Beállítások</h2>
+  <form action="" class="form" method="post" role="form" enctype="multipart/form-data">
+    {% import "bootstrap/wtf.html" as wtf %}
+    {{ wtf.form_field(settings_form.name) }}
+    {{ wtf.form_field(settings_form.new_pwd) }}
+    {{ wtf.form_field(settings_form.email) }}
+    <div class="form-group">
+    {{ settings_form.experience.label() }}
+      <select class="form-control" id="{{ settings_form.experience.label.field_id }}" name="{{ settings_form.experience.label.field_id }}">
+        {% for option in settings_form.experience -%}
+        <option value="{{ option.data }}"{{ ' selected' if option.data == experience }}>{{ option.label.text | e }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {{ wtf.form_field(settings_form.phoneNumber) }}
+    <div class="form-group ">
+      <div style="width:96px" class="center-block">
+        <img src="{{ url_for('static', filename='uploads/avatars/{}'.format(current_user.avatar_src or 'default.jpg')) }}" class="img-responsive">
+      </div>
+      {{ settings_form.avatar.label(class="control-label") }}
+      <input accept="image/*" id="avatar" name="avatar" type="file">
+    </div>
+    {{ wtf.form_field(settings_form.old_pwd) }}
+    {{ settings_form.hidden_tag() }}
+    <div class="form-group">
+      {{ settings_form.submit(class="btn btn-primary btn-lg btn-block") }}
+    </div>
+  </form>
+
+  {% if success is not none %}
+  <p>
+    {% if success %}
+  <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% else %}
+  <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endif %}
+  </p>
+  {% endif %}
+</div>
+{% endblock page_content %}
+{% block scripts %}
+{{ super() }}
+    <script src="{{ url_for('static', filename='js/user-settings.js') }}"></script>
+{% endblock scripts %}

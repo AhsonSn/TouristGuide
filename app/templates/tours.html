@@ -42,7 +42,7 @@
           Megnézem
         </a>
         {% if current_user.is_authenticated %}
-        <a href="#" class="btn btn-success btn-block" role="button">
+        <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success btn-block" role="button">
           <span class="glyphicon glyphicon-ok"></span>
           Jelentkezek
         </a>
@@ -78,4 +78,5 @@
     {% endif %}
   </ul>
 </nav>
+
 {% endblock page_content%}

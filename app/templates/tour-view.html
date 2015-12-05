@@ -21,6 +21,7 @@
       <tr>
         <th>Indulás</th>
         <th>Érkezés</th>
+        <th>Helyszín</th>
         <th>Jelentkezési díj</th>
         <th>Túravezető</th>
         <th>Szükséges tapasztalati szint</th>
@@ -28,6 +29,7 @@
       <tr>
         <td>{{ tour.start_datetime|literal_date }} {{ tour.start_datetime|time }}</td>
         <td>{{ tour.end_datetime|literal_date }} {{ tour.end_datetime|time }}</td>
+        <td>{{ tour.place }}</td>
         <td>{{ tour.price }} Ft</td>
         <td>{{ tour.tour_guide.fullname }}</td>
         <td>{{ tour.experience.name }}</td>
@@ -37,7 +39,7 @@
   </div>
   {% if current_user.is_authenticated %}
   <div class="panel-footer clearfix">
-    <a href="#" class="btn btn-success pull-right" role="button">
+    <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success pull-right" role="button">
       <span class="glyphicon glyphicon-ok"></span>
       Jelentkezek
     </a>
