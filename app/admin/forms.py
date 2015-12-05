@@ -14,6 +14,11 @@ class AddTourForm(Form):
         validators=[DataRequired(u'Add meg a túra nevét!')]
     )
 
+    place = StringField(
+        u'Túra helyszíne',
+        validators=[DataRequired(u'Add meg a túra helyszínét!')]
+    )
+
     start_date = DateField(
         u'Túra időpontja',
         validators=[DataRequired(u'Add meg a kezdődátumot!')]
@@ -29,8 +34,12 @@ class AddTourForm(Form):
         validators=[DataRequired(u'Adj meg legalább 1 képet')]
     )
 
-    experience_id = SelectField(
-        u'Szükséges tapasztalati szint'
+    experience = SelectField(
+        u'Szükséges tapasztalati szint', coerce=int
+    )
+
+    tour_guide = SelectField(
+        u'Túravezető', coerce=int
     )
 
     description = TextAreaField(
@@ -39,7 +48,8 @@ class AddTourForm(Form):
     )
 
     price = IntegerField(
-        u'Túra részvételi díja'
+        u'Túra részvételi díja',
+        validators=[DataRequired(u'Add meg a túra részvételi díját')]
     )
 
     submit = SubmitField(u'Túra létrehozása')
