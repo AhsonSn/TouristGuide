@@ -1,0 +1,56 @@
+{% block styles %}
+<link href="{{ url_for('static', filename='css/weather.css') }}" rel="stylesheet">
+{% endblock styles %}
+
+{% block page_content %}
+<table class="table table-bordered table-hover">
+    <tr>
+        <th></th>
+        {% for date in weathers %}
+        <th>
+            <div class="datum">{{date}}</div>
+       </th>
+         {% endfor %}
+    </tr>
+    <tr>
+        <td>
+            <div class="napszak">Reggel</div>
+        </td>
+        {% for date in weathers %}
+        <td>
+            <div class="homerseklet">{{weathers[date].morn_temp}}<sup>°</sup></div>
+        </td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td>
+            <div class="napszak">Délután</div>
+        </td>
+            {% for date in weathers %}
+        <td>
+            <div class="homerseklet">{{weathers[date].day_temp}}<sup>°</sup></div>
+        </td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td>
+            <div class="napszak">Este</div>
+        </td>
+            {% for date in weathers %}
+        <td>
+            <div class="homerseklet">{{weathers[date].eve_temp}}<sup>°</sup></div>
+        </td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td>
+            <div class="napszak">Éjjel</div>
+        </td>
+           {% for date in weathers %}
+        <td>
+            <div class="homerseklet">{{weathers[date].night_temp}}<sup>°</sup></div>
+        </td>
+        {% endfor %}
+    </tr>
+</table>
+{% endblock page_content%}
