@@ -35,6 +35,7 @@
         <td>{{ tour.experience.name }}</td>
       </tr>
     </table>
+    {% include "weather-widget.html" %}
   </div>
   {% if current_user.is_authenticated %}
   <div class="panel-footer clearfix">

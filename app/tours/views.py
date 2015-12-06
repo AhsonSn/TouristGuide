@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
-
+from app.weather.weatherfactory import WeatherFactory
 from .forms import TourForm, SearchTourForm
 from ..basic.models import sidebar_items
 from ..db.tourmanager import TourManager
@@ -46,8 +46,10 @@ def tours(current_page):
 @tours_blueprint.route('/view-tour/<int:tour_id>')
 def view_tour(tour_id):
     tour = TourManager.get_tour_by_id(tour_id)
+    weathers = WeatherFactory(tour.place, 7).get_weathers()
     return render_template('tour-view.html', sidebar_items=sidebar_items,
-                           tour=tour)
+                           tour=tour,
+                           weathers=weathers)
 
 
 @tours_blueprint.route('/search-tours', methods=('GET', 'POST'))

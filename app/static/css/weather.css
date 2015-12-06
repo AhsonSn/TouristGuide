@@ -1,0 +1,20 @@
+
+.homerseklet {
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.sor {
+    font-size: 14px;
+    text-align: left;
+}
+
+.datum {
+    font-size: 14px;
+    text-align: center;
+}
+
+.weather-data {
+    text-align: center;
+}

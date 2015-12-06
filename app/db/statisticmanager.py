@@ -42,7 +42,7 @@ class StatisticManager(object):
         :param end_date: same as start_date
         :return:
         """
-        list_of_tours = self.tourman.get_list_of_tours_by_date(start_date, end_date)
+        list_of_tours = self.tourman.get_list_of_tours_between_dates(start_date, end_date)
 
         d = dict()
 
@@ -69,7 +69,7 @@ class StatisticManager(object):
         :param end_date: same as start_date
         :return:
         """
-        list_of_tours = self.tourman.get_list_of_tours_by_date(start_date, end_date)
+        list_of_tours = self.tourman.get_list_of_tours_between_dates(start_date, end_date)
 
         d = dict()
         for tour in list_of_tours:
