@@ -3,7 +3,6 @@ from datetime import datetime
 from app import database
 from app.db.models import Registration, User
 
-
 class RegistrationManager(object):
     @staticmethod
     def get_registration_count_by_tour_id(id_):
@@ -29,13 +28,33 @@ class RegistrationManager(object):
         registration = Registration.query.filter_by(
             user=user, tour=tour).first()
 
+        active_registration = Registration.query.filter(Registration.user == user).all()
+        
+        ontour = False
+
+        for reg in active_registration:
+            if reg.tour.start_datetime <= tour.start_datetime <= reg.tour.end_datetime:
+                ontour = True
+                break
+
+        ontour2 = False
+        
+        for reg in active_registration:
+            if reg.tour.start_datetime <= tour.end_datetime <= reg.tour.end_datetime:
+                ontour2 = True
+                break
+
         if registration:
-            return False
+            return 1
+        elif ontour:
+            return 2
+        elif ontour2:
+            return 3
         else:
             database.session.add(
                 Registration(user, tour, datetime.now(), False))
             database.session.commit()
-            return True
+            return 0
 
     @staticmethod
     def unregister_user(user_id, tour_id):
