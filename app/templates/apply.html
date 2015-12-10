@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 {% block title %}TouristGuide &ndash; Túra jelentkezés{% endblock %}
 {% block page_content %}
-<div class="alert {{ 'alert-success' if success else 'alert-danger' }}" role="alert">
-  {% if success %}
+<div class="alert {{ 'alert-success' if success==0 else 'alert-danger' }}" role="alert">
+  {% if success == 0 %}
   Sikeresen jelentkeztél a(z) "{{ tour.name|safe }}" nevű túrára!
-  {% else %}
+  {% endif %}
+  {% if success == 1 %}
   A(z) "{{ tour.name|safe }}" nevű túrára már jelentkeztél!
+  {% endif %}
+  {% if success == 2 %}
+  Sikertelen jelentkezés! A(z) "{{ tour.name|safe }}" nevű túra időpontájban épp 
+  a(z) "{{ tourname }}" túrán leszel!
+  {% endif %}
+  {% if success == 3 %}
+  Sikertelen jelentkezés! A(z) "{{ tour.name|safe }}" nevű túra belelóg a(z) "{{ tourname }}" túrába!
   {% endif %}
 </div>
 {% endblock page_content %}
