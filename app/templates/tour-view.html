@@ -39,10 +39,17 @@
   </div>
   {% if current_user.is_authenticated %}
   <div class="panel-footer clearfix">
+    {% if current_user.account_type_id == 1 %}
+    <a href="{{ url_for('admin.edit_tour', tour_id=tour.id) }}" class="btn btn-success pull-right" role="button">
+      <span class="glyphicon glyphicon-wrench"></span>
+      Szerkesztés
+    </a>
+    {% else %}
     <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success pull-right" role="button">
       <span class="glyphicon glyphicon-ok"></span>
       Jelentkezek
     </a>
+    {% endif %}
   </div>
   {% endif %}
 </div>

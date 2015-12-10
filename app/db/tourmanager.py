@@ -28,12 +28,12 @@ class TourManager(object):
         :return: tuple list of name, and id
         """
         return database.session.query(Tour, "id").filter(
-            Tour.start_datetime.between(start_date_, end_date_)).all()
+                Tour.start_datetime.between(start_date_, end_date_)).all()
 
     @staticmethod
     def get_list_of_tours_between_dates(start_date_, end_date_):
         return database.session.query(Tour).filter(
-            Tour.start_datetime.between(start_date_, end_date_)).all()
+                Tour.start_datetime.between(start_date_, end_date_)).all()
 
     @staticmethod
     def get_list_of_tours_by_date(start_date_):
@@ -43,7 +43,7 @@ class TourManager(object):
         :return: tuple list of name, and id
         """
         return database.session.query(Tour).filter(
-            func.date(Tour.start_datetime) == start_date_).all()
+                func.date(Tour.start_datetime) == start_date_).all()
 
     @staticmethod
     def get_list_of_tours_by_place(place):
@@ -53,7 +53,7 @@ class TourManager(object):
         :return: tuple list of name, and id
         """
         return database.session.query(Tour).filter(
-            func.lower(Tour.place) == func.lower(place)).all()
+                func.lower(Tour.place) == func.lower(place)).all()
 
     @staticmethod
     def get_list_of_tours_by_place_and_date(place, date):
@@ -65,8 +65,8 @@ class TourManager(object):
         :return: tuple list of name, and id
         """
         return database.session.query(Tour).filter(
-            func.lower(Tour.place) == func.lower(place),
-            func.date(Tour.start_datetime) == date
+                func.lower(Tour.place) == func.lower(place),
+                func.date(Tour.start_datetime) == date
         ).all()
 
     @staticmethod
@@ -87,7 +87,7 @@ class TourManager(object):
             order = Tour.experience_id
 
         return Tour.query.order_by(order).paginate(
-            current_page, per_page=per_page
+                current_page, per_page=per_page
         )
 
     @staticmethod
@@ -111,8 +111,8 @@ class TourManager(object):
     @staticmethod
     def delay_tour(tour_id, start_date_, end_date_):
         up = update(Tour).where(Tour.id == tour_id).values(
-            start_datetime=datetime.strptime(start_date_, "%Y-%m-%d %H:%M"),
-            end_datetime=datetime.strptime(end_date_, "%Y-%m-%d %H:%M"))
+                start_datetime=datetime.strptime(start_date_, "%Y-%m-%d %H:%M"),
+                end_datetime=datetime.strptime(end_date_, "%Y-%m-%d %H:%M"))
 
         database.session.execute(up)
         database.session.commit()
@@ -131,10 +131,24 @@ class TourManager(object):
     @staticmethod
     def update_images(tour, images):
         database.session.execute(
-            update(Tour).where(Tour.id == tour.id).values(images=images)
+                update(Tour).where(Tour.id == tour.id).values(images=images)
         )
         database.session.commit()
 
     @staticmethod
-    def update_tour(edit_tour_form):
-        pass
+    def update_tour(current_tour, form):
+        database.session.execute(
+                update(Tour).where(Tour.id == current_tour.id).values(
+                        name=form.name.data,
+                        place=form.place.data,
+                        start_datetime=form.start_date.data,
+                        end_datetime=form.end_date.data,
+                        experience_id=form.experience.data,
+                        tour_guide_id=form.tour_guide.data,
+                        description=form.description.data,
+                        price=form.price.data
+                )
+        )
+        database.session.commit()
+
+        return True
