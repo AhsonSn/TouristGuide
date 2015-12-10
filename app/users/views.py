@@ -152,7 +152,6 @@ def detach_from_tour(tour_id):
 @users.route('/registrations')
 @login_required
 def registrations():
-
     regs = RegistrationManager.get_registrations_of_user(current_user)
     results = []
 

@@ -60,7 +60,41 @@ class EditTourForm(Form):
         return super(EditTourForm, self).generate_csrf_token(csrf_context)
 
     name = StringField(u'Túra neve')
-    description = TextAreaField(u'Túra leírása')
+
+    place = StringField(
+        u'Túra helyszíne',
+        validators=[DataRequired(u'Add meg a túra helyszínét!')]
+    )
+
+    start_date = DateField(
+        u'Túra időpontja',
+        validators=[DataRequired(u'Add meg a kezdődátumot!')]
+    )
+
+    end_date = DateField(
+        u'-',
+        validators=[DataRequired(u'Add meg a vég dátumot!')]
+    )
+
+    experience = SelectField(
+        u'Szükséges tapasztalati szint', coerce=int
+    )
+
+    tour_guide = SelectField(
+        u'Túravezető', coerce=int
+    )
+
+    description = TextAreaField(
+        u'Túra leírása',
+        validators=[DataRequired(u'Add meg a túra leírását!')]
+    )
+
+    price = IntegerField(
+        u'Túra részvételi díja',
+        validators=[DataRequired(u'Add meg a túra részvételi díját')]
+    )
+
+    submit = SubmitField(u'Túra mentése')
 
 
 class StatisticsForm(Form):
