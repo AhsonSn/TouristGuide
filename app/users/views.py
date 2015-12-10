@@ -136,7 +136,7 @@ def apply_for_tour(tour_id):
     success = RegistrationManager.register_user(current_user, tour)
 
     return render_template(
-        'apply.html', sidebar_items=sidebar_items, tour=tour, success=success)
+        'apply.html', sidebar_items=sidebar_items, tour=tour, success=success[0], tourname=success[1])
 
 
 @users.route('/detach-from-tour/<int:tour_id>')
