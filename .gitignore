@@ -81,3 +81,5 @@ crashlytics-build.properties
 
 # vim swap files
 *.swp
+/.vs/TouristGuide/v14/.suo
+*.pyproj
