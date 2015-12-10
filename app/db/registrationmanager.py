@@ -30,31 +30,31 @@ class RegistrationManager(object):
 
         active_registration = Registration.query.filter(Registration.user == user).all()
         
-        ontour = False
+        ontour = ""
 
         for reg in active_registration:
             if reg.tour.start_datetime <= tour.start_datetime <= reg.tour.end_datetime:
-                ontour = True
+                ontour = reg.tour.name
                 break
 
-        ontour2 = False
+        ontour2 = ""
         
         for reg in active_registration:
             if reg.tour.start_datetime <= tour.end_datetime <= reg.tour.end_datetime:
-                ontour2 = True
+                ontour2 = reg.tour.name
                 break
 
         if registration:
-            return 1
-        elif ontour:
-            return 2
-        elif ontour2:
-            return 3
+            return (1, "")
+        elif ontour != "":
+            return (2, ontour)
+        elif ontour2 != "":
+            return (3, ontour2)
         else:
             database.session.add(
                 Registration(user, tour, datetime.now(), False))
             database.session.commit()
-            return 0
+            return (0, "")
 
     @staticmethod
     def unregister_user(user_id, tour_id):
