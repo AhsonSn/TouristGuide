@@ -104,4 +104,4 @@ def update_tour_images(id_, string):
         TourManager.update_images(TourManager.get_tour_by_id(id_), string)
         return '1'
     else:
-        return u'Hozzáfárás megtagadva'
+        return u'Hozzáférés megtagadva'
