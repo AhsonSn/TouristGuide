@@ -143,10 +143,10 @@ def apply_for_tour(tour_id):
 @login_required
 def detach_from_tour(tour_id):
     tour = TourManager.get_tour_by_id(tour_id)
-    RegistrationManager.unregister_user(current_user.id, tour_id)
+    success = RegistrationManager.unregister_user(current_user.id, tour)
 
     return render_template(
-        'detach.html', sidebar_items=sidebar_items, tour=tour)
+        'detach.html', sidebar_items=sidebar_items, tour=tour, success=success)
 
 
 @users.route('/registrations')

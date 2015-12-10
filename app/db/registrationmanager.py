@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from app import database
 from app.db.models import Registration, User
@@ -44,6 +44,11 @@ class RegistrationManager(object):
                 ontour2 = reg.tour.name
                 break
 
+        last_apply = tour.start_datetime + timedelta(days=-1)
+        last_apply = last_apply.replace(hour=12, minute=0, second=0, microsecond=0)
+        if last_apply <= datetime.now():
+            return (4, "")
+
         if registration:
             return (1, "")
         elif ontour != "":
@@ -57,6 +62,13 @@ class RegistrationManager(object):
             return (0, "")
 
     @staticmethod
-    def unregister_user(user_id, tour_id):
-        Registration.query.filter_by(tour_id=tour_id, user_id=user_id).delete()
+    def unregister_user(user_id, tour):
+        last_apply = tour.start_datetime + timedelta(days=-1)
+        last_apply = last_apply.replace(hour=12, minute=0, second=0, microsecond=0)
+        if last_apply <= datetime.now():
+            return False 
+
+        Registration.query.filter_by(tour_id=tour.id, user_id=user_id).delete()
         database.session.commit()
+
+        return True

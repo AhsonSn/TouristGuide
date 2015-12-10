@@ -15,5 +15,8 @@
   {% if success == 3 %}
   Sikertelen jelentkezés! A(z) "{{ tour.name|safe }}" nevű túra belelóg a(z) "{{ tourname }}" túrába!
   {% endif %}
+  {% if success == 4 %}
+  Túra jelentkezés le van tiltva! A túrák legkésőbbi jelentkezési időpont a túra kezdete előtti nap 12 óra!
+  {% endif %}
 </div>
 {% endblock page_content %}

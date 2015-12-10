@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block title %}TouristGuide &ndash; Túra lejelentkezés{% endblock %}
 {% block page_content %}
-<div class="alert alert-success" role="alert">
-  Sikeresen lejelentkeztél a(z) "{{ tour.name|safe }}" nevű túráról!
+<div class="alert {{ 'alert-success' if success else 'alert-danger' }}" role="alert">
+  {% if success %}
+    Sikeresen lejelentkeztél a(z) "{{ tour.name|safe }}" nevű túráról!
+  {% else %}
+    Lejelentkezés letíltásra került! Legkésőbbi lejelentkezés a túra előtti nap 11:59:59.
+  {% endif %}
 </div>
 {% endblock page_content %}
