@@ -24,7 +24,16 @@ def generate_random_string(length):
 
 sidebar_items = [
     ('/tours', 'tours', 'Túrák'),
+]
+
+ceo_sidebar_items = [
+    ('/tours', 'tours', 'Túrák'),
     ('/statistics', 'statistics', 'Statisztikák'),
     ('/add-tour', 'add_tour', 'Túra hozzáadás'),
     ('/edit-tour', 'edit_tour', 'Túra szerkesztés')
+]
+
+guide_sidebar_items = [
+    ('/tours', 'tours', 'Túrák'),
+    ('/statistics', 'statistics', 'Statisztikák'),
 ]

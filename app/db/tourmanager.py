@@ -134,3 +134,7 @@ class TourManager(object):
             update(Tour).where(Tour.id == tour.id).values(images=images)
         )
         database.session.commit()
+
+    @staticmethod
+    def update_tour(edit_tour_form):
+        pass

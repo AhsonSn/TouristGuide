@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
-
 from .forms import AddTourForm, EditTourForm, StatisticsForm
-from ..basic.models import sidebar_items
+from ..basic.models import ceo_sidebar_items
 from ..db.experiencemanager import ExperienceManager
 from ..db.tourmanager import TourManager
 from ..db.usermanager import UserManager
@@ -25,27 +24,37 @@ def add_tour():
     success = False
 
     if add_tour_form.validate_on_submit():
-        print(add_tour_form)
         TourManager.insert_tour(add_tour_form)
         success = True
 
     return render_template('add-tour.html',
                            add_tour_form=add_tour_form,
-                           sidebar_items=sidebar_items,
+                           sidebar_items=ceo_sidebar_items,
                            success=success)
 
 
 @admin.route('/edit-tour', methods=('GET', 'POST'))
 @login_required
+# CEO ONLY
 def edit_tour():
     edit_tour_form = EditTourForm()
 
+    edit_tour_form.experience.choices = [(e.id, e.name) for e in
+                                         ExperienceManager.get_experiences()]
+
+    edit_tour_form.tour_guide.choices = [(guide.id, guide.fullname) for guide in
+                                         UserManager.get_user_by_role_id(4)]
+
+    success = False
+
     if edit_tour_form.validate_on_submit():
-        return 'Success'
+        TourManager.update_tour(edit_tour_form)
+        success = True
 
     return render_template('tour-edit.html',
                            edit_tour_form=edit_tour_form,
-                           sidebar_items=sidebar_items)
+                           sidebar_items=ceo_sidebar_items,
+                           success=success)
 
 
 @admin.route('/statistics', methods=('GET', 'POST'))
@@ -66,7 +75,7 @@ def statistics():
                                                                    statistics_form.end_date.data)
         return render_template('statistics.html',
                                statistics_form=statistics_form,
-                               sidebar_items=sidebar_items,
+                               sidebar_items=ceo_sidebar_items,
                                chart_type=chart_type,
                                labels=labels,
                                data=data
@@ -74,4 +83,4 @@ def statistics():
 
     return render_template('statistics_form.html',
                            statistics_form=statistics_form,
-                           sidebar_items=sidebar_items)
+                           sidebar_items=ceo_sidebar_items)
