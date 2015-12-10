@@ -1,33 +1,21 @@
-from .models import Tour
 from datetime import datetime
+from sqlalchemy import update, func
 from app import database
+from .models import Tour
 from .registrationmanager import RegistrationManager
-from sqlalchemy import update
-
 
 
 class TourManager(object):
-
     @staticmethod
-    def insert_tour(name, start_date, end_date, exp_id, tg_id, description, images="", dateformat="%Y-%m-%d %H:%M"):
+    def insert_tour(form):
         """
         Insert a new tour into the database. The default date format is yyyy.mm.dd hh:mi, as a string.
         If you want to change it, pass the dateformat parameter.
-        :param name: Tour name
-        :param start_date: string of start date time of tour
-        :param end_date: string of end date time of tour
-        :param exp_id: experience id
-        :param tg_id: tour guide id
-        :param description: description of tour
-        :param images: (Optional) tour images src
-        :param dateformat: (Optional) a format string to start and end date.
+        :param form: the form
         """
 
-        tour = Tour(name, exp_id, tg_id)
-        tour.start_datetime = datetime.strptime(start_date, dateformat)
-        tour.end_datetime = datetime.strptime(end_date, dateformat)
-        tour.images = images
-        tour.description = description
+        tour = Tour(form.data)
+        tour.images = ";".join(form.images.raw_data)
         database.session.add(tour)
         database.session.commit()
 
@@ -39,17 +27,47 @@ class TourManager(object):
         :param end_date_: end date of query
         :return: tuple list of name, and id
         """
-        return database.session.query(Tour, "id").filter(Tour.start_datetime.between(start_date_, end_date_)).all()
+        return database.session.query(Tour, "id").filter(
+            Tour.start_datetime.between(start_date_, end_date_)).all()
 
     @staticmethod
-    def get_list_of_tours_by_date(start_date_, end_date_):
+    def get_list_of_tours_between_dates(start_date_, end_date_):
+        return database.session.query(Tour).filter(
+            Tour.start_datetime.between(start_date_, end_date_)).all()
+
+    @staticmethod
+    def get_list_of_tours_by_date(start_date_):
         """
-        Return a list of tours between dates.
+        Return a list of tours whose start date is equal to start_date_.
         :param start_date_: start date of query
-        :param end_date_: end date of query
         :return: tuple list of name, and id
         """
-        return database.session.query(Tour).filter(Tour.start_datetime.between(start_date_, end_date_)).all()
+        return database.session.query(Tour).filter(
+            func.date(Tour.start_datetime) == start_date_).all()
+
+    @staticmethod
+    def get_list_of_tours_by_place(place):
+        """
+        Return a list of tours whose place is equal to place.
+        :param place: start date of query
+        :return: tuple list of name, and id
+        """
+        return database.session.query(Tour).filter(
+            func.lower(Tour.place) == func.lower(place)).all()
+
+    @staticmethod
+    def get_list_of_tours_by_place_and_date(place, date):
+        """
+        Return a list of tours whose place is equal to place and
+        start date is equal to start_date_.
+        :param place: place of tour
+        :param date: start date of query
+        :return: tuple list of name, and id
+        """
+        return database.session.query(Tour).filter(
+            func.lower(Tour.place) == func.lower(place),
+            func.date(Tour.start_datetime) == date
+        ).all()
 
     @staticmethod
     def get_page_of_tours(current_page, per_page, order_by):
@@ -68,7 +86,13 @@ class TourManager(object):
         else:
             order = Tour.experience_id
 
-        return Tour.query.order_by(order).paginate(current_page, per_page=per_page)
+        return Tour.query.order_by(order).paginate(
+            current_page, per_page=per_page
+        )
+
+    @staticmethod
+    def get_tour_by_id(tour_id):
+        return Tour.query.get(tour_id)
 
     @staticmethod
     def delete_tour(tour_id):
@@ -86,8 +110,10 @@ class TourManager(object):
 
     @staticmethod
     def delay_tour(tour_id, start_date_, end_date_):
-        up = update(Tour).where(Tour.id == tour_id).values(start_datetime= \
-                            datetime.strptime(start_date_, "%Y-%m-%d %H:%M"), end_datetime=datetime.strptime(end_date_, "%Y-%m-%d %H:%M"))
+        up = update(Tour).where(Tour.id == tour_id).values(
+            start_datetime=datetime.strptime(start_date_, "%Y-%m-%d %H:%M"),
+            end_datetime=datetime.strptime(end_date_, "%Y-%m-%d %H:%M"))
+
         database.session.execute(up)
         database.session.commit()
 
@@ -101,3 +127,14 @@ class TourManager(object):
             database.session.commit()
 
         return True
+
+    @staticmethod
+    def update_images(tour, images):
+        database.session.execute(
+            update(Tour).where(Tour.id == tour.id).values(images=images)
+        )
+        database.session.commit()
+
+    @staticmethod
+    def update_tour(edit_tour_form):
+        pass

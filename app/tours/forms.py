@@ -1,5 +1,7 @@
 from flask_wtf import Form
-from wtforms import SubmitField, SelectField
+from wtforms import SubmitField, SelectField, StringField
+from wtforms.fields.html5 import DateField
+from wtforms.validators import Optional
 
 
 class TourForm(Form):
@@ -20,4 +22,13 @@ class TourForm(Form):
         default=12
     )
 
+    submit = SubmitField(u'Mehet')
+
+
+class SearchTourForm(Form):
+    def generate_csrf_token(self, csrf_context=None):
+        return super(SearchTourForm, self).generate_csrf_token(csrf_context)
+
+    place = StringField(u'Túra helyszíne', validators=[Optional()])
+    date = DateField(u'Túra időpontja', validators=[Optional()])
     submit = SubmitField(u'Mehet')

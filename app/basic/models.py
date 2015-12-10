@@ -1,16 +1,20 @@
+import os
 import random
 import string
-import os
+
 from flask import current_app
 
 
 class UploadManager(object):
     @staticmethod
     def upload_avatar(image):
-        filename = generate_random_string(20) + os.path.splitext(image.filename)[1]
-        image.save(os.path.join(current_app.config['AVATAR_UPLOAD_FOLDER'], filename))
-        print("Image uploaded: {}".format(filename))
-        return filename
+        if image.content_type:
+            filename = generate_random_string(20) + \
+                       os.path.splitext(image.filename)[1]
+            image.save(os.path.join(current_app.config['AVATAR_UPLOAD_FOLDER'],
+                                    filename))
+            print("Image uploaded: {}".format(filename))
+            return filename
 
 
 def generate_random_string(length):
@@ -20,8 +24,16 @@ def generate_random_string(length):
 
 sidebar_items = [
     ('/tours', 'tours', 'Túrák'),
+]
+
+ceo_sidebar_items = [
+    ('/tours', 'tours', 'Túrák'),
     ('/statistics', 'statistics', 'Statisztikák'),
     ('/add-tour', 'add_tour', 'Túra hozzáadás'),
-    ('/edit-tour', 'edit_tour', 'Túra szerkesztés'),
-    ('/weather', 'get_weather', 'Időjárás előrejelzés')
+    ('/edit-tour', 'edit_tour', 'Túra szerkesztés')
+]
+
+guide_sidebar_items = [
+    ('/tours', 'tours', 'Túrák'),
+    ('/statistics', 'statistics', 'Statisztikák'),
 ]

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}TouristGuide &ndash; Túra jelentkezés{% endblock %}
+{% block page_content %}
+<div class="alert {{ 'alert-success' if success else 'alert-danger' }}" role="alert">
+  {% if success %}
+  Sikeresen jelentkeztél a(z) "{{ tour.name|safe }}" nevű túrára!
+  {% else %}
+  A(z) "{{ tour.name|safe }}" nevű túrára már jelentkeztél!
+  {% endif %}
+</div>
+{% endblock page_content %}

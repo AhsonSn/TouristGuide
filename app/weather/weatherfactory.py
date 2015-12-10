@@ -1,5 +1,6 @@
 import requests
 import datetime
+import collections
 
 from app.weather.weather import Weather
 
@@ -17,17 +18,15 @@ class WeatherFactory(object):
         today = datetime.date.today()
         d = response.json()
         for index, data in enumerate(d["list"]):
-            date = datetime.date(today.year, today.month, today.day + index)
+            date = str(datetime.date(today.year, today.month, today.day + index))
+            date = date[date.find('-') + 1:].replace('-', '.')
             self.weathers[date] = Weather(data)
 
     def get_weather_by_date(self, date):
         return self.weathers[date]
 
     def get_weathers(self):
-        result = ""
-        for date in self.weathers:
-            result += "Date: {d}\nWeather information:\n{wi}\n".format(d=date, wi=self.weathers[date])
-        return result
+        return collections.OrderedDict(sorted(self.weathers.items()))
 
 
 def main():

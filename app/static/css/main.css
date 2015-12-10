@@ -63,3 +63,8 @@ body {
 .order-chooser {
   padding-bottom: 20px;
 }
+
+.form-add-tour {
+  max-width: 480px;
+  margin: 0 auto;
+}
