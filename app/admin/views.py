@@ -33,10 +33,11 @@ def add_tour():
                            success=success)
 
 
-@admin.route('/edit-tour', methods=('GET', 'POST'))
+@admin.route('/edit-tour/<int:tour_id>', methods=('GET', 'POST'))
 @login_required
 # CEO ONLY
-def edit_tour():
+def edit_tour(tour_id):
+    current_tour = TourManager.get_tour_by_id(tour_id)
     edit_tour_form = EditTourForm()
 
     edit_tour_form.experience.choices = [(e.id, e.name) for e in
@@ -48,12 +49,21 @@ def edit_tour():
     success = False
 
     if edit_tour_form.validate_on_submit():
-        TourManager.update_tour(edit_tour_form)
-        success = True
+        success = TourManager.update_tour(current_tour, edit_tour_form)
+    else:
+        edit_tour_form.name.data = current_tour.name
+        edit_tour_form.place.data = current_tour.place
+        edit_tour_form.start_date.data = current_tour.start_datetime
+        edit_tour_form.end_date.data = current_tour.end_datetime
+        edit_tour_form.price.data = current_tour.price
+        edit_tour_form.description.data = current_tour.description
 
     return render_template('tour-edit.html',
                            edit_tour_form=edit_tour_form,
                            sidebar_items=ceo_sidebar_items,
+                           tour=current_tour,
+                           experience=current_tour.experience_id,
+                           guide=current_tour.tour_guide_id,
                            success=success)
 
 

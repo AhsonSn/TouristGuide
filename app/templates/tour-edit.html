@@ -1,8 +1,42 @@
 {% extends "base.html" %}
 {% set active_page = "edit_tour" %}
-{% block title %}Túra szerkesztése{% endblock %}
+{% block title %}TouristGuide - Túra szerkesztése - {{ tour.name }}{% endblock %}
 {% block page_content %}
-<h1 class="page-header">Túra szerkesztése</h1>
-{% import "bootstrap/wtf.html" as wtf %}
-{{ wtf.quick_form(edit_tour_form) }}
+<div class="form-edit-tour">
+    <h2 class="page-header">Túra szerkesztése</h2>
+    <form action="" class="form" method="post" role="form">
+        {{ edit_tour_form.hidden_tag() }}
+        {% import "bootstrap/wtf.html" as wtf %}
+        {{ wtf.form_field(edit_tour_form.name) }}
+        {{ wtf.form_field(edit_tour_form.place) }}
+        <div class="form-group form-inline required">
+            {{ edit_tour_form.start_date.label(class="control-label") }}
+            {{ edit_tour_form.start_date(class="form-control") }}
+            {{ edit_tour_form.end_date.label(class="control-label") }}
+            {{ edit_tour_form.end_date(class="form-control") }}
+        </div>
+        <div class="form-group form-inline">
+            {{ edit_tour_form.experience.label() }}
+            <select class="form-control" id="{{ edit_tour_form.experience.label.field_id }}" name="{{ edit_tour_form.experience.label.field_id }}">
+                {% for option in edit_tour_form.experience -%}
+                <option value="{{ option.data }}"{{ ' selected' if option.data == experience }}>{{ option.label.text | e }}</option>
+                {% endfor %}
+            </select>
+            {{ edit_tour_form.tour_guide.label() }}
+            <select class="form-control" id="{{ edit_tour_form.tour_guide.label.field_id }}" name="{{ edit_tour_form.tour_guide.label.field_id }}">
+                {% for option in edit_tour_form.tour_guide -%}
+                <option value="{{ option.data }}"{{ ' selected' if option.data == guide }}>{{ option.label.text | e }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {{ wtf.form_field(edit_tour_form.price) }}
+        {{ wtf.form_field(edit_tour_form.description) }}
+        <div class="form-group">
+            {{ edit_tour_form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+    {% if success %}
+    <div class="alert alert-success" role="alert">Beállításaidat elmentettük.</div>
+    {% endif %}
+</div>
 {% endblock page_content %}
