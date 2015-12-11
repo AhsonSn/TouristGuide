@@ -1,7 +1,7 @@
 from flask_wtf import Form
 from flask_wtf.file import FileField
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, \
-    SelectField
+    SelectField, TextAreaField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, EqualTo, Email, Regexp, Optional
 
@@ -124,3 +124,19 @@ class SettingsForm(Form):
     )
 
     submit = SubmitField(u'Beállítások mentése')
+
+class MessageForm(Form):
+    def generate_csrf_token(self, csrf_context=None):
+        return super(MessageForm, self).generate_csrf_token(csrf_context)
+
+    subject = StringField(
+        u'Tárgy',
+        validators=[DataRequired(u'Add meg a tárgyat!')]
+    )
+
+    message = TextAreaField(
+        u'Üzenet',
+        validators=[DataRequired(u'Add meg az üzenetet!')]
+    )
+
+    submit = SubmitField(u'Küldés')

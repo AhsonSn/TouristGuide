@@ -164,9 +164,13 @@ class Registration(database.Model):
 
 
 class Message(database.Model):
-    def __init__(self, from_user, message):
-        self.from_user = from_user
+    def __init__(self, from_user, subject_, message, date_):
+        self.from_user_id = from_user
+        self.subject = subject_
         self.message = message
+        self.date = date_
+        self.read = 0
+
 
     __tablename__ = 'messages'
 
@@ -183,6 +187,10 @@ class Message(database.Model):
     date = database.Column(database.DateTime, nullable=False)
 
     message = database.Column(database.Text)
+
+    read = database.Column(database.Integer)
+
+    subject = database.Column(database.Text)
 
     def __repr__(self):
         return '<Message \'{}\'>'.format(self.id)
