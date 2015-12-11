@@ -1,0 +1,75 @@
+﻿{% extends "base.html" %}
+{% block title %}Üzenetek{% endblock %}
+{% block style %}
+{{ super() }}
+<link href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.css" rel="stylesheet"  type="text/css" media="screen">
+{% endblock style %}
+{% block page_content %}
+<h2 class="page-header">Üzenetek</h2>
+{% if results %}
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Dátum</th>
+        <th>Feladó</th>
+        <th>Tárgy</th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% for message in results %}
+    {% if message.read == 0 %}
+        <tr id="sor_{{ message.id }}" style="font-weight: bold;">
+    {% else %}
+        <tr id="sor_{{ message.id }}">
+    {% endif %}
+        <td>{{ message.date|literal_date }} {{ message.date|time }}</td>
+        <td>{{ message.from_user.fullname }} ({{message.from_user.username}})</td>
+        <td>{{ message.subject }}</td>
+        <td style="vertical-align: middle">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#{{ message.id }}" onclick="setread({{ message.id }})">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="{{ message.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <table>
+                                    <tr>
+                                        <td><b>Feladó: </b></td>
+                                        <td>{{ message.from_user.fullname }}({{ message.from_user.username }})</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Tárgy: </b></td>
+                                        <td>{{ message.subject }}</td>
+                                    </tr>
+                                </table>
+                            </h4>
+                        </div>
+                        <div class="modal-body" style="font-weight: normal;">
+                            {{ message.message }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+
+        <td style="vertical-align: middle">
+            <a href="/deletemessage/{{ message.id }}" class="btn btn-danger btn-block" role="button">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<div class="alert alert-warning" role="alert">Nincs egy üzenet sem!</div>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/viewmail.js') }}"> </script>
+{% endblock scripts %}
