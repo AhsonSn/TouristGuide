@@ -2,16 +2,23 @@ from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash
 
-from .forms import LoginForm, RegisterForm, SettingsForm
+from .forms import LoginForm, RegisterForm, SettingsForm, MessageForm
 from ..basic.models import sidebar_items
 from ..db.dbfactory import DBFactory
 from ..db.experiencemanager import ExperienceManager
 from ..db.registrationmanager import RegistrationManager
 from ..db.tourmanager import TourManager
 from ..db.usermanager import UserManager
+from ..db.messagemanager import MessageManager
+from app import database
 
 users = Blueprint('users', __name__)
 
+#@users.route('/createtable')
+#def create_table():
+#    database.create_all()
+    
+#    return render_template('writemessage.html', sidebar_items=sidebar_items)
 
 @users.route('/login', methods=('GET', 'POST'))
 def login():
@@ -166,3 +173,52 @@ def registrations():
 @login_required
 def username_available(username):
     return '0' if UserManager.get_user_with_name(username) else '1'
+
+@users.route('/messages')
+@login_required
+def messages():
+    if current_user.account_type_id != 1:
+        return redirect('/')
+
+    mess = MessageManager.get_list()
+
+    return render_template('message.html', sidebar_items=sidebar_items, results=mess)
+
+@users.route('/writemessages',  methods=('GET', 'POST'))
+@login_required
+def writemessages():
+    if current_user.account_type_id != 2:
+        return redirect('/')
+
+    message_form = MessageForm()
+
+    if message_form.validate_on_submit():
+        
+        MessageManager.insert_new_message(current_user.id, message_form.subject.data, message_form.message.data)
+
+        return render_template('writemessage.html', 
+                               sidebar_items=sidebar_items, 
+                               message_form=message_form,
+                               message='Az üzenetet sikeresen elküldtük!')
+    
+    
+    return render_template('writemessage.html', sidebar_items=sidebar_items, message_form=message_form, message='')
+
+@users.route('/checkmail')
+@login_required
+def checkmail():
+    return str(MessageManager.get_new_mails_count())
+
+@users.route('/readmail/<messageid>')
+@login_required
+def readmail(messageid):
+    success = MessageManager.refreshRead(messageid, 1)
+
+    return '0'
+
+@users.route('/deletemessage/<mid>')
+@login_required
+def deletemessage(mid):
+    MessageManager.delete(mid)
+
+    return redirect("/messages")
