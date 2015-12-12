@@ -1,0 +1,23 @@
+﻿{% extends "base.html" %}
+{% block title %}Üzenetek{% endblock %}
+{% block page_content %}
+<div class="form-signin">
+    <h2 class="page-header">Üzenet a vezetőnek</h2>
+    {% if message != "" %}
+    <div class="alert alert-success" role="alert">
+       {{ message  }}
+        <a href="{{ url_for('users.writemessages') }}" class="alert-link">Új üzenet küldése</a>
+    </div>
+    {% else %}
+    <form action="" method="post" role="form">
+        {% import "bootstrap/wtf.html" as wtf %}
+        {{ wtf.form_field(message_form.subject) }}
+        {{ wtf.form_field(message_form.message) }}
+        {{ message_form.hidden_tag() }}
+        <div class="form-group">
+            {{ message_form.submit(class="btn btn-primary btn-lg btn-block") }}
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

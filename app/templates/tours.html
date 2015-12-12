@@ -31,7 +31,11 @@
   {% for tour in tours %}
   <div class="col-sm-6 col-md-3">
     <div class="thumbnail">
+      {% if tour.images %}
+      <img src="{{ url_for('static', filename='uploads/tour-images/{}'.format(tour.images.split(';')[0])) }}">
+      {% else %}
       <img src="//placehold.it/320x200">
+      {% endif %}
       <div class="caption">
         <h5 class="tour-caption"><b>{{ tour.name | e }}</b></h5>
         <p class="text-warning">{{ tour.experience.name | e }}</p>

@@ -1,8 +1,11 @@
 from datetime import datetime
+
 from sqlalchemy import update, func
+
 from app import database
 from .models import Tour
 from .registrationmanager import RegistrationManager
+from ..basic.models import UploadManager
 
 
 class TourManager(object):
@@ -15,7 +18,7 @@ class TourManager(object):
         """
 
         tour = Tour(form.data)
-        tour.images = ";".join(form.images.raw_data)
+        tour.images = UploadManager.upload_tour_images()
         database.session.add(tour)
         database.session.commit()
 

@@ -4,7 +4,7 @@
 {% block page_content %}
 <div class="form-add-tour">
 <h2 class="page-header">Túra hozzáadása</h2>
-<form action="" class="form" method="post" role="form">
+<form action="" class="form" method="post" role="form" enctype="multipart/form-data">
 {{ add_tour_form.hidden_tag() }}
 {% import "bootstrap/wtf.html" as wtf %}
   {{ wtf.form_field(add_tour_form.name) }}
