@@ -4,12 +4,11 @@ from werkzeug.security import check_password_hash
 
 from .forms import LoginForm, RegisterForm, SettingsForm, MessageForm
 from ..basic.models import sidebar_items
-from ..db.dbfactory import DBFactory
-from ..db.experiencemanager import ExperienceManager
-from ..db.registrationmanager import RegistrationManager
-from ..db.tourmanager import TourManager
-from ..db.usermanager import UserManager
-from ..db.messagemanager import MessageManager
+from ..db.experiencemanager import ExperienceDAO
+from ..db.registrationmanager import RegistrationDAO
+from ..db.tourmanager import TourDAO
+from ..db.usermanager import UserDAO
+from ..db.messagemanager import MessageDAO
 from app import database
 
 users = Blueprint('users', __name__)
@@ -25,8 +24,7 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
-        instance = DBFactory.get_instance()
-        user = instance.User.get_user_by_name(login_form)
+        user = UserDAO.get_user_by_name(login_form)
 
         if not user:
             return render_template('login.html', login_form=login_form,
@@ -60,11 +58,10 @@ def logout():
 def register():
     register_form = RegisterForm()
     register_form.experience.choices = [(e.id, e.name) for e in
-                                        ExperienceManager.get_experiences()]
+                                        ExperienceDAO.get_experiences()]
 
     if register_form.validate_on_submit():
-        instance = DBFactory.get_instance()
-        if instance.User.insert_user(register_form,
+        if UserDAO.insert_user(register_form,
                                      register_form.experience.data):
             return render_template(
                 'register.html', register_form=register_form,
@@ -86,7 +83,7 @@ def register():
 def settings():
     settings_form = SettingsForm()
     settings_form.experience.choices = [(e.id, e.name) for e in
-                                        ExperienceManager.get_experiences()]
+                                        ExperienceDAO.get_experiences()]
 
     if settings_form.validate_on_submit():
         if not check_password_hash(current_user.password,
@@ -98,26 +95,26 @@ def settings():
                 success=False, message='Rossz jelszó!')
 
         if settings_form.name.data != current_user.username:
-            UserManager.update_username(current_user.id,
+            UserDAO.update_username(current_user.id,
                                         settings_form.name.data)
 
         if settings_form.new_pwd.data:
-            UserManager.update_pwd(current_user.username,
+            UserDAO.update_pwd(current_user.username,
                                    settings_form.new_pwd.data)
 
         if settings_form.email.data != current_user.email:
-            UserManager.update_email(current_user.username,
+            UserDAO.update_email(current_user.username,
                                      settings_form.email.data)
 
-        UserManager.update_experience(current_user.username,
+        UserDAO.update_experience(current_user.username,
                                       settings_form.experience.data)
 
         if settings_form.phoneNumber.data != current_user.phone:
-            UserManager.update_phone(current_user.username,
+            UserDAO.update_phone(current_user.username,
                                      settings_form.phoneNumber.data)
 
         if settings_form.avatar.has_file():
-            UserManager.update_avatar(current_user.username,
+            UserDAO.update_avatar(current_user.username,
                                       request.files['avatar'])
 
         return render_template(
@@ -139,8 +136,8 @@ def settings():
 @users.route('/apply-for-tour/<int:tour_id>')
 @login_required
 def apply_for_tour(tour_id):
-    tour = TourManager.get_tour_by_id(tour_id)
-    success = RegistrationManager.register_user(current_user, tour)
+    tour = TourDAO.get_tour_by_id(tour_id)
+    success = RegistrationDAO.register_user(current_user, tour)
 
     return render_template(
         'apply.html', sidebar_items=sidebar_items, tour=tour, success=success[0], tourname=success[1])
@@ -149,8 +146,8 @@ def apply_for_tour(tour_id):
 @users.route('/detach-from-tour/<int:tour_id>')
 @login_required
 def detach_from_tour(tour_id):
-    tour = TourManager.get_tour_by_id(tour_id)
-    success = RegistrationManager.unregister_user(current_user.id, tour)
+    tour = TourDAO.get_tour_by_id(tour_id)
+    success = RegistrationDAO.unregister_user(current_user.id, tour)
 
     return render_template(
         'detach.html', sidebar_items=sidebar_items, tour=tour, success=success)
@@ -159,11 +156,11 @@ def detach_from_tour(tour_id):
 @users.route('/registrations')
 @login_required
 def registrations():
-    regs = RegistrationManager.get_registrations_of_user(current_user)
+    regs = RegistrationDAO.get_registrations_of_user(current_user)
     results = []
 
     for reg in regs:
-        results.append(TourManager.get_tour_by_id(reg.tour_id))
+        results.append(TourDAO.get_tour_by_id(reg.tour_id))
 
     return render_template(
         'registrations.html', sidebar_items=sidebar_items, results=results)
@@ -172,7 +169,7 @@ def registrations():
 @users.route('/username-available/<username>')
 @login_required
 def username_available(username):
-    return '0' if UserManager.get_user_with_name(username) else '1'
+    return '0' if UserDAO.get_user_with_name(username) else '1'
 
 @users.route('/messages')
 @login_required
@@ -180,7 +177,7 @@ def messages():
     if current_user.account_type_id != 1:
         return redirect('/')
 
-    mess = MessageManager.get_list()
+    mess = MessageDAO.get_list()
 
     return render_template('message.html', sidebar_items=sidebar_items, results=mess)
 
@@ -194,7 +191,7 @@ def writemessages():
 
     if message_form.validate_on_submit():
         
-        MessageManager.insert_new_message(current_user.id, message_form.subject.data, message_form.message.data)
+        MessageDAO.insert_new_message(current_user.id, message_form.subject.data, message_form.message.data)
 
         return render_template('writemessage.html', 
                                sidebar_items=sidebar_items, 
@@ -207,18 +204,18 @@ def writemessages():
 @users.route('/checkmail')
 @login_required
 def checkmail():
-    return str(MessageManager.get_new_mails_count())
+    return str(MessageDAO.get_new_mails_count())
 
 @users.route('/readmail/<messageid>')
 @login_required
 def readmail(messageid):
-    success = MessageManager.refreshRead(messageid, 1)
+    success = MessageDAO.refreshRead(messageid, 1)
 
     return '0'
 
 @users.route('/deletemessage/<mid>')
 @login_required
 def deletemessage(mid):
-    MessageManager.delete(mid)
+    MessageDAO.delete(mid)
 
     return redirect("/messages")
