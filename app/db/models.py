@@ -75,6 +75,7 @@ class User(UserMixin, database.Model):
     email = database.Column(database.String(100), nullable=False)
     phone = database.Column(database.String(11))
     allowance = database.Column(database.Integer)
+    numoftours = database.Column(database.Integer)
 
     def __repr__(self):
         return '<User \'{}\'>'.format(self.username)

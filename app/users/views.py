@@ -13,11 +13,10 @@ from app import database
 
 users = Blueprint('users', __name__)
 
-#@users.route('/createtable')
-#def create_table():
-#    database.create_all()
-    
-#    return render_template('writemessage.html', sidebar_items=sidebar_items)
+@users.route('/num')
+def create_table():
+    UserDAO.incTour(current_user)
+    return redirect(url_for('basic.home')) 
 
 @users.route('/login', methods=('GET', 'POST'))
 def login():
@@ -138,6 +137,8 @@ def settings():
 def apply_for_tour(tour_id):
     tour = TourDAO.get_tour_by_id(tour_id)
     success = RegistrationDAO.register_user(current_user, tour)
+    if success[0] == 0:
+        current_user.allowance = UserDAO.incTour(current_user)
 
     return render_template(
         'apply.html', sidebar_items=sidebar_items, tour=tour, success=success[0], tourname=success[1])
@@ -148,6 +149,8 @@ def apply_for_tour(tour_id):
 def detach_from_tour(tour_id):
     tour = TourDAO.get_tour_by_id(tour_id)
     success = RegistrationDAO.unregister_user(current_user.id, tour)
+    if success:
+        UserDAO.decTour(current_user)
 
     return render_template(
         'detach.html', sidebar_items=sidebar_items, tour=tour, success=success)
@@ -163,7 +166,7 @@ def registrations():
         results.append(TourDAO.get_tour_by_id(reg.tour_id))
 
     return render_template(
-        'registrations.html', sidebar_items=sidebar_items, results=results)
+        'registrations.html', sidebar_items=sidebar_items, results=results, user=current_user)
 
 
 @users.route('/username-available/<username>')

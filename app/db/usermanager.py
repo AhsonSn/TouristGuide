@@ -219,3 +219,29 @@ class UserDAO(object):
             database.session.commit()
 
         return True
+
+    @staticmethod
+    def incTour(user):
+        ntours = database.session.query(User.numoftours).filter(User.id==user.id).first()
+        numoftours_ = ntours[0] + 1
+        allowance_ = None
+        if numoftours_ >= 5 and user.allowance is None:
+            allowance_ = 5
+       
+        database.session.execute(update(User).where(User.id==user.id).values(numoftours=numoftours_, allowance=allowance_))
+        database.session.commit()
+
+        return allowance_
+
+    @staticmethod
+    def decTour(user):
+        ntours = database.session.query(User.numoftours).filter(User.id==user.id).first()
+        numoftours_ = ntours[0] - 1
+        allowance_ = None
+        if numoftours_ < 5:
+            allowance_ = None
+        
+        database.session.execute(update(User).where(User.id==user.id).values(numoftours=numoftours_, allowance=allowance_))
+        database.session.commit()
+
+        return True

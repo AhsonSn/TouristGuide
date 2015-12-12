@@ -59,7 +59,7 @@ def view_tour(tour_id):
     weathers = WeatherFactory(tour.place, 7).get_weathers()
     return render_template('tour-view.html', sidebar_items=current_sidebar,
                            tour=tour,
-                           weathers=weathers)
+                           weathers=weathers, user=current_user)
 
 
 @tours_blueprint.route('/search-tours', methods=('GET', 'POST'))
