@@ -86,7 +86,7 @@ class TourManager(object):
         else:
             order = Tour.experience_id
 
-        return Tour.query.order_by(order).paginate(
+        return Tour.query.filter(Tour.start_datetime > datetime.today()).order_by(order).paginate(
                 current_page, per_page=per_page
         )
 
