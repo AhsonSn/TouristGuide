@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from app import database
 from app.db.models import Registration, User
 
-class RegistrationManager(object):
+class RegistrationDAO(object):
     @staticmethod
     def get_registration_count_by_tour_id(id_):
         return Registration.query.filter_by(tour_id=id_).count()

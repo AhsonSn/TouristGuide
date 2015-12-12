@@ -32,8 +32,14 @@
         <td>{{ tour.start_datetime|literal_date }} {{ tour.start_datetime|time }}</td>
         <td>{{ tour.end_datetime|literal_date }} {{ tour.end_datetime|time }}</td>
         <td>{{ tour.place }}</td>
-        <td>{{ tour.price }} Ft</td>
-        <td>{{ tour.tour_guide.fullname }}</td>
+        <td>
+            {% if user.allowance is not none %}
+            {{ (tour.price * ((100 - user.allowance)/100))|round|int }} Ft 5%
+            {% else %}
+            {{ tour.price }} Ft
+            {% endif %}
+         </td>
+         <td>{{ tour.tour_guide.fullname }}</td>
         <td>{{ tour.experience.name }}</td>
       </tr>
     </table>

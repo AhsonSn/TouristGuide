@@ -4,7 +4,7 @@ from app import database
 
 from sqlalchemy import desc, update
 
-class MessageManager(object):
+class MessageDAO(object):
 
     @staticmethod
     def get_list():

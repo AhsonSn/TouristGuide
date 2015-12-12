@@ -7,7 +7,7 @@ from .. import database
 from ..basic.models import UploadManager
 
 
-class UserManager(object):
+class UserDAO(object):
     @staticmethod
     def insert_user(form, experience_id=1, account_type_id=3):
         """
@@ -37,8 +37,8 @@ class UserManager(object):
         else:
             user.avatar_src = None
 
-        if UserManager.get_user_with_name(extr["name"]) is not None \
-                or UserManager.get_user_by_email(extr["email"]) is not None:
+        if UserDAO.get_user_with_name(extr["name"]) is not None \
+                or UserDAO.get_user_by_email(extr["email"]) is not None:
             return False
 
         database.session.add(user)
@@ -61,7 +61,7 @@ class UserManager(object):
 
     @staticmethod
     def get_user_by_name(form):
-        return UserManager.get_user_with_name(
+        return UserDAO.get_user_with_name(
             FormExtractor.extract(form)["name"])
 
     @staticmethod
@@ -124,7 +124,7 @@ class UserManager(object):
         :param newpwd: new password of username
         :return: True if it was updated
         """
-        act_user = UserManager.get_user_with_name(username_)
+        act_user = UserDAO.get_user_with_name(username_)
 
         if act_user:
             up = update(User).where(
@@ -139,7 +139,7 @@ class UserManager(object):
 
     @staticmethod
     def update_phone(username_, phonenumber):
-        act_user = UserManager.get_user_with_name(username_)
+        act_user = UserDAO.get_user_with_name(username_)
 
         if act_user:
             up = update(User).where(User.username == username_).values(
@@ -159,7 +159,7 @@ class UserManager(object):
         :param image: new user avatar image
         :return: True if update was succeed.
         """
-        act_user = UserManager.get_user_with_name(username_)
+        act_user = UserDAO.get_user_with_name(username_)
 
         if act_user:
             filename = UploadManager.upload_avatar(image)
@@ -179,7 +179,7 @@ class UserManager(object):
         :param email: new email of user
         :return: True if update was succeed
         """
-        act_user = UserManager.get_user_with_name(username_)
+        act_user = UserDAO.get_user_with_name(username_)
 
         if act_user is not None:
             up = update(User).where(User.username == username_).values(
@@ -198,7 +198,7 @@ class UserManager(object):
         :param exp_: experience id
         :return: True if update was succeed
         """
-        act_user = UserManager.get_user_with_name(username_)
+        act_user = UserDAO.get_user_with_name(username_)
 
         if act_user:
             up = update(User).where(User.username == username_).values(
@@ -217,5 +217,31 @@ class UserManager(object):
                 allowance=user.allowance)
             database.session.execute(up)
             database.session.commit()
+
+        return True
+
+    @staticmethod
+    def incTour(user):
+        ntours = database.session.query(User.numoftours).filter(User.id==user.id).first()
+        numoftours_ = ntours[0] + 1
+        allowance_ = None
+        if numoftours_ >= 5 and user.allowance is None:
+            allowance_ = 5
+       
+        database.session.execute(update(User).where(User.id==user.id).values(numoftours=numoftours_, allowance=allowance_))
+        database.session.commit()
+
+        return allowance_
+
+    @staticmethod
+    def decTour(user):
+        ntours = database.session.query(User.numoftours).filter(User.id==user.id).first()
+        numoftours_ = ntours[0] - 1
+        allowance_ = None
+        if numoftours_ < 5:
+            allowance_ = None
+        
+        database.session.execute(update(User).where(User.id==user.id).values(numoftours=numoftours_, allowance=allowance_))
+        database.session.commit()
 
         return True
