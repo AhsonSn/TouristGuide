@@ -2,9 +2,9 @@ from flask import Blueprint, render_template
 from flask_login import login_required
 from .forms import AddTourForm, EditTourForm, StatisticsForm
 from ..basic.models import ceo_sidebar_items
-from ..db.experiencemanager import ExperienceManager
-from ..db.tourmanager import TourManager
-from ..db.usermanager import UserManager
+from ..db.experiencemanager import ExperienceDAO
+from ..db.tourmanager import TourDAO
+from ..db.usermanager import UserDAO
 from ..statistics.statistics import Statistics
 
 admin = Blueprint('admin', __name__)
@@ -16,15 +16,15 @@ admin = Blueprint('admin', __name__)
 def add_tour():
     add_tour_form = AddTourForm()
     add_tour_form.experience.choices = [(e.id, e.name) for e in
-                                        ExperienceManager.get_experiences()]
+                                        ExperienceDAO.get_experiences()]
 
     add_tour_form.tour_guide.choices = [(guide.id, guide.fullname) for guide in
-                                        UserManager.get_user_by_role_id(4)]
+                                        UserDAO.get_user_by_role_id(4)]
 
     success = False
 
     if add_tour_form.validate_on_submit():
-        TourManager.insert_tour(add_tour_form)
+        TourDAO.insert_tour(add_tour_form)
         success = True
 
     return render_template('add-tour.html',
@@ -37,19 +37,19 @@ def add_tour():
 @login_required
 # CEO ONLY
 def edit_tour(tour_id):
-    current_tour = TourManager.get_tour_by_id(tour_id)
+    current_tour = TourDAO.get_tour_by_id(tour_id)
     edit_tour_form = EditTourForm()
 
     edit_tour_form.experience.choices = [(e.id, e.name) for e in
-                                         ExperienceManager.get_experiences()]
+                                         ExperienceDAO.get_experiences()]
 
     edit_tour_form.tour_guide.choices = [(guide.id, guide.fullname) for guide in
-                                         UserManager.get_user_by_role_id(4)]
+                                         UserDAO.get_user_by_role_id(4)]
 
     success = False
 
     if edit_tour_form.validate_on_submit():
-        success = TourManager.update_tour(current_tour, edit_tour_form)
+        success = TourDAO.update_tour(current_tour, edit_tour_form)
     else:
         edit_tour_form.name.data = current_tour.name
         edit_tour_form.place.data = current_tour.place

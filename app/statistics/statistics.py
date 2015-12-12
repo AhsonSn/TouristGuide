@@ -1,10 +1,7 @@
-from app.db import dbfactory
-from app.db.dbfactory import DBFactory
+from app.db.statisticmanager import StatisticDAO
 
 
 class Statistics(object):
-    def __init__(self):
-        self.statistics_manager = DBFactory.get_instance().Statistic
 
     def get_stat_by_registered_user(self, start_date, end_date):
         """
@@ -14,7 +11,7 @@ class Statistics(object):
         :param end_date: the end of the time interval
         :return: a tuple that contains: labels, data
         """
-        tours = self.statistics_manager.get_tours(start_date, end_date)
+        tours = StatisticDAO.get_tours(start_date, end_date)
         labels = [str(name) for (name, count) in tours]
         data = [count for (name, count) in tours]
         return labels, data
@@ -27,7 +24,7 @@ class Statistics(object):
         :param end_date: the end of the time interval
         :return: a tuple that contains: labels, data
         """
-        tourguides = self.statistics_manager.get_static_from_tour_guide(start_date, end_date)
+        tourguides = StatisticDAO.get_static_from_tour_guide(start_date, end_date)
         labels = [str(name) for (name, count) in tourguides]
         data = [count for (name, count) in tourguides]
         return labels, data
@@ -40,7 +37,7 @@ class Statistics(object):
         :param end_date:
         :return: a tuple that contains: labels, data
         """
-        tourguides = self.statistics_manager.get_static_from_tour_guide_popularity(start_date, end_date)
+        tourguides = StatisticDAO.get_static_from_tour_guide_popularity(start_date, end_date)
         labels = [str(name) for (name, count) in tourguides]
         data = [count for (name, count) in tourguides]
         return labels, data

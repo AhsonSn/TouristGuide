@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from app.weather.weatherfactory import WeatherFactory
 from .forms import TourForm, SearchTourForm
 from ..basic.models import sidebar_items, ceo_sidebar_items
-from ..db.tourmanager import TourManager
+from ..db.tourmanager import TourDAO
 
 tours_blueprint = Blueprint('tours', __name__)
 tours_blueprint.current_items_per_page = None
@@ -36,7 +36,7 @@ def tours(current_page):
         tours_blueprint.current_order_by = tour_form.order_by.data
         return redirect(url_for('tours.tours_default'))
 
-    pagination = TourManager.get_page_of_tours(
+    pagination = TourDAO.get_page_of_tours(
         current_page, tours_blueprint.current_items_per_page,
         tours_blueprint.current_order_by
     )
@@ -55,11 +55,11 @@ def view_tour(tour_id):
     if not current_user.is_anonymous and current_user.account_type_id == 1:
         current_sidebar = ceo_sidebar_items
 
-    tour = TourManager.get_tour_by_id(tour_id)
+    tour = TourDAO.get_tour_by_id(tour_id)
     weathers = WeatherFactory(tour.place, 7).get_weathers()
     return render_template('tour-view.html', sidebar_items=current_sidebar,
                            tour=tour,
-                           weathers=weathers)
+                           weathers=weathers, user=current_user)
 
 
 @tours_blueprint.route('/search-tours', methods=('GET', 'POST'))
@@ -79,12 +79,12 @@ def search_tours():
         results = []
 
         if place and date:
-            results = TourManager.get_list_of_tours_by_place_and_date(
+            results = TourDAO.get_list_of_tours_by_place_and_date(
                 place, date)
         elif place:
-            results = TourManager.get_list_of_tours_by_place(place)
+            results = TourDAO.get_list_of_tours_by_place(place)
         elif date:
-            results = TourManager.get_list_of_tours_by_date(date)
+            results = TourDAO.get_list_of_tours_by_date(date)
 
         if results:
             return render_template('tour-search.html',
@@ -101,7 +101,7 @@ def search_tours():
 @login_required
 def update_tour_images(id_, string):
     if current_user.account_type_id == 1:
-        TourManager.update_images(TourManager.get_tour_by_id(id_), string)
+        TourDAO.update_images(TourDAO.get_tour_by_id(id_), string)
         return '1'
     else:
         return u'Hozzáférés megtagadva'

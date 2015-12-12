@@ -1,7 +1,7 @@
 from .models import Experience
 
 
-class ExperienceManager(object):
+class ExperienceDAO(object):
 
     @staticmethod
     def get_experiences():

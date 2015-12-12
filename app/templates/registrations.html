@@ -17,7 +17,12 @@
   <tr>
     <td>{{ tour.start_datetime|literal_date }} {{ tour.start_datetime|time }}</td>
     <td>{{ tour.name }}</td>
-    <td>{{ tour.price }} Ft</td>
+    <td>{% if user.allowance is not none %}
+           {{ (tour.price * ((100 - user.allowance)/100))|round|int }} Ft 5%
+        {% else %}
+           {{ tour.price }} Ft 
+        {% endif %}  
+    </td>
     <td>{{ tour.tour_guide.fullname }}</td>
     <td style="vertical-align: middle">
       <a href="{{ url_for('tours.view_tour', tour_id=tour.id) }}" class="btn btn-primary btn-block" role="button">

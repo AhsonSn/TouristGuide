@@ -1,11 +1,14 @@
 from datetime import datetime
+
 from sqlalchemy import update, func
+
 from app import database
 from .models import Tour
-from .registrationmanager import RegistrationManager
+from .registrationmanager import RegistrationDAO
+from ..basic.models import UploadManager
 
 
-class TourManager(object):
+class TourDAO(object):
     @staticmethod
     def insert_tour(form):
         """
@@ -15,7 +18,7 @@ class TourManager(object):
         """
 
         tour = Tour(form.data)
-        tour.images = ";".join(form.images.raw_data)
+        tour.images = UploadManager.upload_tour_images()
         database.session.add(tour)
         database.session.commit()
 
@@ -86,7 +89,7 @@ class TourManager(object):
         else:
             order = Tour.experience_id
 
-        return Tour.query.order_by(order).paginate(
+        return Tour.query.filter(Tour.start_datetime > datetime.today()).order_by(order).paginate(
                 current_page, per_page=per_page
         )
 
@@ -101,8 +104,8 @@ class TourManager(object):
         :param tour_id: id of tour.
         :return: list of registered user's email.
         """
-        l = RegistrationManager.get_tour_users_email(tour_id)
-        RegistrationManager.delete_tour(tour_id)
+        l = RegistrationDAO.get_tour_users_email(tour_id)
+        RegistrationDAO.delete_tour(tour_id)
 
         Tour.query.filter_by(id=tour_id).delete()
         database.session.commit()
@@ -117,7 +120,7 @@ class TourManager(object):
         database.session.execute(up)
         database.session.commit()
 
-        return RegistrationManager.get_tour_users_email(tour_id)
+        return RegistrationDAO.get_tour_users_email(tour_id)
 
     @staticmethod
     def set_prices(list_of_tour):
