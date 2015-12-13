@@ -1,6 +1,5 @@
 from sqlalchemy import update
 from werkzeug.security import generate_password_hash
-
 from .formextractor import FormExtractor
 from .models import User, Role
 from .. import database
@@ -221,27 +220,43 @@ class UserDAO(object):
         return True
 
     @staticmethod
+    def update_status(id_, new_status):
+        act_user = User.query.get(id_)
+
+        if act_user is not None:
+            up = update(User).where(User.id == id_).values(
+                status=new_status
+            )
+            database.session.execute(up)
+            database.session.commit()
+            return True
+
+        return False
+
+    @staticmethod
     def incTour(user):
-        ntours = database.session.query(User.numoftours).filter(User.id==user.id).first()
+        ntours = database.session.query(User.numoftours).filter(User.id == user.id).first()
         numoftours_ = ntours[0] + 1
         allowance_ = None
         if numoftours_ >= 5 and user.allowance is None:
             allowance_ = 5
-       
-        database.session.execute(update(User).where(User.id==user.id).values(numoftours=numoftours_, allowance=allowance_))
+
+        database.session.execute(
+            update(User).where(User.id == user.id).values(numoftours=numoftours_, allowance=allowance_))
         database.session.commit()
 
         return allowance_
 
     @staticmethod
     def decTour(user):
-        ntours = database.session.query(User.numoftours).filter(User.id==user.id).first()
+        ntours = database.session.query(User.numoftours).filter(User.id == user.id).first()
         numoftours_ = ntours[0] - 1
         allowance_ = None
         if numoftours_ < 5:
             allowance_ = None
-        
-        database.session.execute(update(User).where(User.id==user.id).values(numoftours=numoftours_, allowance=allowance_))
+
+        database.session.execute(
+            update(User).where(User.id == user.id).values(numoftours=numoftours_, allowance=allowance_))
         database.session.commit()
 
         return True
