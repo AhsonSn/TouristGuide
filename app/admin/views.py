@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from flask_login import login_required
-from .forms import AddTourForm, EditTourForm, StatisticsForm
-from ..basic.models import ceo_sidebar_items
+from .forms import AddTourForm, EditTourForm, StatisticsForm, EditTourGuidesForm
+from ..basic.models import ceo_sidebar_items, sidebar_items
 from ..db.experiencemanager import ExperienceDAO
 from ..db.tourmanager import TourDAO
 from ..db.usermanager import UserDAO
@@ -68,6 +68,8 @@ def edit_tour(tour_id):
 
 
 @admin.route('/statistics', methods=('GET', 'POST'))
+@login_required
+# CEO ONLY
 def statistics():
     statistics_form = StatisticsForm()
 
@@ -94,3 +96,22 @@ def statistics():
     return render_template('statistics_form.html',
                            statistics_form=statistics_form,
                            sidebar_items=ceo_sidebar_items)
+
+
+@admin.route('/tour_guide_edit', methods=('GET', 'POST'))
+@login_required
+# TOUR SUPERVISOR ONLY
+def tour_leaders_edit():
+    tour_guides = UserDAO.get_user_by_role_id(4)
+    edit_tour_guides_form = EditTourGuidesForm()
+
+    if edit_tour_guides_form.validate_on_submit():
+        for tour_guide in tour_guides:
+            status = int(request.form[str(tour_guide.id)])
+            if status != tour_guide.status:
+                UserDAO.update_status(tour_guide.id, status)
+
+    return render_template('tourguide-edit.html',
+                           edit_tour_guides_form=edit_tour_guides_form,
+                           tour_guides=tour_guides,
+                           sidebar_items=sidebar_items)

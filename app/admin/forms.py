@@ -120,3 +120,10 @@ class StatisticsForm(Form):
                                        'A túravezetők népszerűsége alapján')])
 
     submit = SubmitField(u'Diagram készítése')
+
+
+class EditTourGuidesForm(Form):
+    def generate_csrf_token(self, csrf_context=None):
+        return super(EditTourGuidesForm, self).generate_csrf_token(csrf_context)
+
+    submit = SubmitField(u'Mentés')

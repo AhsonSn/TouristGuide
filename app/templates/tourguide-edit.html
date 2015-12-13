@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% set active_page = "edit_tour" %}
+{% block title %}Túravezetők menedzselése{% endblock %}
+{% block page_content %}
+<h1>Túravezetők menedzselése</h1>
+{% if tour_guides %}
+<form action="" class="form" method="post" role="form" enctype="multipart/form-data">
+    {% import "bootstrap/wtf.html" as wtf %}
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>Név</th>
+            <th>Születési dátum</th>
+            <th>Státusz</th>
+        </tr>
+
+        {% for tour_guide in tour_guides %}
+        <tr>
+            <td>{{ tour_guide.fullname }}</td>
+            <td>{{ tour_guide.birth }}</td>
+            <td>
+                <select class="form-control" id="{{ tour_guide.id }}"
+                        name="{{ tour_guide.id }}">
+                    <option value="1" {{
+                    ' selected' if tour_guide.status == 1 }}>Szabad
+                    </option>
+                    <option value="2" {{
+                    ' selected' if tour_guide.status == 2 }}>Túrázik
+                    </option>
+                    <option value="3" {{
+                    ' selected' if tour_guide.status == 3 }}>Szabadságon van
+                    </option>
+                </select>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {{ edit_tour_guides_form.hidden_tag() }}
+    <div class="form-group">
+        {{ edit_tour_guides_form.submit(class="btn btn-primary", style="float:right;") }}
+    </div>
+</form>
+{% endif %}
+{% endblock page_content %}
