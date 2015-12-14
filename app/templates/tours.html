@@ -45,10 +45,17 @@
           Megnézem
         </a>
         {% if current_user.is_authenticated and current_user.account_type_id != 1 %}
-        <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success btn-block" role="button">
-          <span class="glyphicon glyphicon-ok"></span>
-          Jelentkezek
-        </a>
+          {% if tour.id in apply_tours %}
+          <a href="{{ url_for('users.detach_from_tour', tour_id=tour.id) }}" class="btn btn-danger btn-block" role="button">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+              Lemondás
+          </a>
+          {% else %}
+            <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success btn-block" role="button">
+                <span class="glyphicon glyphicon-ok"></span>
+                Jelentkezek
+            </a>
+          {% endif %}
         {% endif %}
       </div>
     </div>

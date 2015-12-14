@@ -3,68 +3,74 @@
 {% block page_content %}
 
 <div class="panel panel-primary">
-  <div class="panel-heading">
-    <h3 class="panel-title"><b>{{ tour.name }}</b></h3>
-  </div>
-  <div class="panel-body">
-    {% if tour.images %}
-    <div class="row">
-      {% for image in tour.images.split(';') %}
-      <div class="col-sm-2">
-        <a href="{{ url_for('static', filename='uploads/tour-images/{}'.format(image)) }}" data-toggle="lightbox" data-title="{{ tour.name }}" class="thumbnail">
-          <img src="{{ url_for('static', filename='uploads/tour-images/{}'.format(image)) }}">
-        </a>
-      </div>
-      {% endfor %}
-    {% endif %}
+    <div class="panel-heading">
+        <h3 class="panel-title"><b>{{ tour.name }}</b></h3>
     </div>
-    <p style="margin-bottom: 20px">{{ tour.description }}</p>
-    <table class="table table-bordered table-hover">
-      <tr>
-        <th>Indulás</th>
-        <th>Érkezés</th>
-        <th>Helyszín</th>
-        <th>Jelentkezési díj</th>
-        <th>Túravezető</th>
-        <th>Szükséges tapasztalati szint</th>
-      </tr>
-      <tr>
-        <td>{{ tour.start_datetime|literal_date }} {{ tour.start_datetime|time }}</td>
-        <td>{{ tour.end_datetime|literal_date }} {{ tour.end_datetime|time }}</td>
-        <td>{{ tour.place }}</td>
-        <td>
-            {% if user.allowance is not none %}
-            {{ (tour.price * ((100 - user.allowance)/100))|round|int }} Ft 5%
-            {% else %}
-            {{ tour.price }} Ft
+    <div class="panel-body">
+        {% if tour.images %}
+        <div class="row">
+            {% for image in tour.images.split(';') %}
+            <div class="col-sm-2">
+                <a href="{{ url_for('static', filename='uploads/tour-images/{}'.format(image)) }}" data-toggle="lightbox" data-title="{{ tour.name }}" class="thumbnail">
+                    <img src="{{ url_for('static', filename='uploads/tour-images/{}'.format(image)) }}">
+                </a>
+            </div>
+            {% endfor %}
             {% endif %}
-         </td>
-         <td>{{ tour.tour_guide.fullname }}</td>
-        <td>{{ tour.experience.name }}</td>
-      </tr>
-    </table>
-    {% include "weather-widget.html" %}
-  </div>
-  {% if current_user.is_authenticated %}
-  <div class="panel-footer clearfix">
-    {% if current_user.account_type_id == 1 %}
-    <a href="{{ url_for('admin.edit_tour', tour_id=tour.id) }}" class="btn btn-success pull-right" role="button">
-      <span class="glyphicon glyphicon-wrench"></span>
-      Szerkesztés
-    </a>
-    {% else %}
-    <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success pull-right" role="button">
-      <span class="glyphicon glyphicon-ok"></span>
-      Jelentkezek
-    </a>
+        </div>
+        <p style="margin-bottom: 20px">{{ tour.description }}</p>
+        <table class="table table-bordered table-hover">
+            <tr>
+                <th>Indulás</th>
+                <th>Érkezés</th>
+                <th>Helyszín</th>
+                <th>Jelentkezési díj</th>
+                <th>Túravezető</th>
+                <th>Szükséges tapasztalati szint</th>
+            </tr>
+            <tr>
+                <td>{{ tour.start_datetime|literal_date }} {{ tour.start_datetime|time }}</td>
+                <td>{{ tour.end_datetime|literal_date }} {{ tour.end_datetime|time }}</td>
+                <td>{{ tour.place }}</td>
+                <td>
+                    {% if user.is_authenticated and user.allowance is not none %}
+                    {{ (tour.price * ((100 - user.allowance)/100))|round|int }} Ft 5%
+                    {% else %}
+                    {{ tour.price }} Ft
+                    {% endif %}
+                </td>
+                <td>{{ tour.tour_guide.fullname }}</td>
+                <td>{{ tour.experience.name }}</td>
+            </tr>
+        </table>
+        {% include "weather-widget.html" %}
+    </div>
+    {% if current_user.is_authenticated %}
+    <div class="panel-footer clearfix">
+        {% if current_user.account_type_id == 1 %}
+        <a href="{{ url_for('admin.edit_tour', tour_id=tour.id) }}" class="btn btn-success pull-right" role="button">
+            <span class="glyphicon glyphicon-wrench"></span>
+            Szerkesztés
+        </a>
+        {% else %}
+        {% if applyed %}
+        <a href="{{ url_for('users.detach_from_tour', tour_id=tour.id) }}" class="btn btn-danger pull-right" role="button">
+            <span class="glyphicon glyphicon-remove-circle"></span>
+            Lemondás
+        </a>
+        {% else %}
+        <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success pull-right" role="button">
+            <span class="glyphicon glyphicon-ok"></span>
+            Jelentkezek
+        </a>
+        {% endif %}
+        {% endif %}
+    </div>
     {% endif %}
-  </div>
-  {% endif %}
 </div>
-
 {% endblock page_content%}
 {% block scripts %}
 {{ super() }}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/3.3.0/ekko-lightbox.min.js"></script>
-    <script src="{{ url_for('static', filename='js/tour-view.js') }}"> </script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/3.3.0/ekko-lightbox.min.js"></script>
+<script src="{{ url_for('static', filename='js/tour-view.js') }}"> </script>
 {% endblock scripts %}
