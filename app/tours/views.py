@@ -4,6 +4,8 @@ from app.weather.weatherfactory import WeatherFactory
 from .forms import TourForm, SearchTourForm
 from ..basic.models import sidebar_items, ceo_sidebar_items
 from ..db.tourmanager import TourDAO
+from app.db.usermanager import UserDAO
+from app.db.registrationmanager import RegistrationDAO
 
 tours_blueprint = Blueprint('tours', __name__)
 tours_blueprint.current_items_per_page = None
@@ -41,11 +43,17 @@ def tours(current_page):
         tours_blueprint.current_order_by
     )
 
+    app_tours = []
+    if current_user is not None:
+        rows = RegistrationDAO.get_registrations_tour_ids_of_user(current_user)
+        app_tours = [x[0] for x in rows]
+
     return render_template('tours.html', sidebar_items=current_sidebar,
                            tour_form=tour_form,
                            tours=pagination.items, pagination=pagination,
                            items=tours_blueprint.current_items_per_page,
-                           sort=tours_blueprint.current_order_by)
+                           sort=tours_blueprint.current_order_by,
+                           apply_tours=app_tours)
 
 
 @tours_blueprint.route('/view-tour/<int:tour_id>')

@@ -23,6 +23,10 @@ class RegistrationDAO(object):
     def get_registrations_of_user(user):
         return Registration.query.filter_by(user_id=user.id).all()
 
+    @staticmethod 
+    def get_registrations_tour_ids_of_user(user):
+        return database.session.query(Registration.tour_id).filter(Registration.user==user).all()
+
     @staticmethod
     def register_user(user, tour):
         registration = Registration.query.filter_by(
