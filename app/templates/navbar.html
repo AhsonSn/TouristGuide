@@ -16,7 +16,18 @@
           <a href="{{ url_for('users.messages') }}"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
               Üzenetek<span id="newmails" class="badge"></span></a>
           </li>
+        <li>
+          <a href="{{ url_for('admin.statistics') }}"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+            Statisztikák</a>
+        </li>
+        <li>
+          <a href="{{ url_for('admin.add_tour') }}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Túra létrehozása</a>
+        </li>
         {% endif %}
+
+        <li><a href="{{ url_for('tours.tours_default') }}"><span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+          Túrák listája</a></li>
 
         <li><a href="{{ url_for('tours.search_tours') }}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           Túrák keresése</a></li>

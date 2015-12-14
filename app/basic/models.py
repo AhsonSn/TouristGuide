@@ -38,14 +38,3 @@ class UploadManager(object):
 def generate_random_string(length):
     return "".join(random.choice(string.ascii_letters + string.digits)
                    for _ in range(length))
-
-
-sidebar_items = [
-    ('/tours', 'tours', 'Túrák'),
-]
-
-ceo_sidebar_items = [
-    ('/tours', 'tours', 'Túrák'),
-    ('/statistics', 'statistics', 'Statisztikák'),
-    ('/add-tour', 'add_tour', 'Túra hozzáadás'),
-]
