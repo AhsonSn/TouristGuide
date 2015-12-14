@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block title %}TouristGuide &ndash; Túra jelentkezés{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='js/redirect.js') }}"></script>
+{% endblock scripts %}
 {% block page_content %}
 <div class="alert {{ 'alert-success' if success==0 else 'alert-danger' }}" role="alert">
   {% if success == 0 %}
@@ -18,5 +22,6 @@
   {% if success == 4 %}
   Túra jelentkezés le van tiltva! A túrák legkésőbbi jelentkezési időpont a túra kezdete előtti nap 12 óra!
   {% endif %}
+    <a href="/tours"><div id="timeLeft" style="display: inline;">15</div> másodperc múlva visszairányítunk a túrák oldalra </a>
 </div>
 {% endblock page_content %}
