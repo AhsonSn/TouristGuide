@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request
 from flask_login import login_required
+
 from .forms import AddTourForm, EditTourForm, StatisticsForm, EditTourGuidesForm
-from ..basic.models import ceo_sidebar_items, sidebar_items
 from ..db.experiencemanager import ExperienceDAO
 from ..db.tourmanager import TourDAO
 from ..db.usermanager import UserDAO
@@ -29,7 +29,6 @@ def add_tour():
 
     return render_template('add-tour.html',
                            add_tour_form=add_tour_form,
-                           sidebar_items=ceo_sidebar_items,
                            success=success)
 
 
@@ -60,7 +59,6 @@ def edit_tour(tour_id):
 
     return render_template('tour-edit.html',
                            edit_tour_form=edit_tour_form,
-                           sidebar_items=ceo_sidebar_items,
                            tour=current_tour,
                            experience=current_tour.experience_id,
                            guide=current_tour.tour_guide_id,
@@ -77,25 +75,26 @@ def statistics():
         stat = Statistics()
         chart_type = "bar_chart"
         if statistics_form.input_type.data == "reg_user":
-            (labels, data) = stat.get_stat_by_registered_user(statistics_form.start_date.data,
-                                                              statistics_form.end_date.data)
+            (labels, data) = stat.get_stat_by_registered_user(
+                statistics_form.start_date.data,
+                statistics_form.end_date.data)
         elif statistics_form.input_type.data == "guided_tour":
-            (labels, data) = stat.get_stat_by_tourguide(statistics_form.start_date.data,
-                                                        statistics_form.end_date.data)
+            (labels, data) = stat.get_stat_by_tourguide(
+                statistics_form.start_date.data,
+                statistics_form.end_date.data)
         elif statistics_form.input_type.data == "popularity":
-            (labels, data) = stat.get_stat_by_tourguide_popularity(statistics_form.start_date.data,
-                                                                   statistics_form.end_date.data)
+            (labels, data) = stat.get_stat_by_tourguide_popularity(
+                statistics_form.start_date.data,
+                statistics_form.end_date.data)
         return render_template('statistics.html',
                                statistics_form=statistics_form,
-                               sidebar_items=ceo_sidebar_items,
                                chart_type=chart_type,
                                labels=labels,
                                data=data
                                )
 
     return render_template('statistics_form.html',
-                           statistics_form=statistics_form,
-                           sidebar_items=ceo_sidebar_items)
+                           statistics_form=statistics_form)
 
 
 @admin.route('/tour_guide_edit', methods=('GET', 'POST'))
@@ -113,5 +112,4 @@ def tour_leaders_edit():
 
     return render_template('tourguide-edit.html',
                            edit_tour_guides_form=edit_tour_guides_form,
-                           tour_guides=tour_guides,
-                           sidebar_items=sidebar_items)
+                           tour_guides=tour_guides)

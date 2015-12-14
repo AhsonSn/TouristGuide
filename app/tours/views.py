@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
+
 from app.weather.weatherfactory import WeatherFactory
 from .forms import TourForm, SearchTourForm
-from ..basic.models import sidebar_items, ceo_sidebar_items
 from ..db.tourmanager import TourDAO
 
 tours_blueprint = Blueprint('tours', __name__)
@@ -17,11 +17,6 @@ def tours_default():
 
 @tours_blueprint.route('/tours/<int:current_page>', methods=('GET', 'POST'))
 def tours(current_page):
-    current_sidebar = sidebar_items
-
-    if not current_user.is_anonymous and current_user.account_type_id == 1:
-        current_sidebar = ceo_sidebar_items
-
     tour_form = TourForm()
 
     if not tours_blueprint.current_items_per_page:
@@ -41,7 +36,7 @@ def tours(current_page):
         tours_blueprint.current_order_by
     )
 
-    return render_template('tours.html', sidebar_items=current_sidebar,
+    return render_template('tours.html',
                            tour_form=tour_form,
                            tours=pagination.items, pagination=pagination,
                            items=tours_blueprint.current_items_per_page,
@@ -50,25 +45,14 @@ def tours(current_page):
 
 @tours_blueprint.route('/view-tour/<int:tour_id>')
 def view_tour(tour_id):
-    current_sidebar = sidebar_items
-
-    if not current_user.is_anonymous and current_user.account_type_id == 1:
-        current_sidebar = ceo_sidebar_items
-
     tour = TourDAO.get_tour_by_id(tour_id)
     weathers = WeatherFactory(tour.place, 7).get_weathers()
-    return render_template('tour-view.html', sidebar_items=current_sidebar,
-                           tour=tour,
+    return render_template('tour-view.html', tour=tour,
                            weathers=weathers, user=current_user)
 
 
 @tours_blueprint.route('/search-tours', methods=('GET', 'POST'))
 def search_tours():
-    current_sidebar = sidebar_items
-
-    if not current_user.is_anonymous and current_user.account_type_id == 1:
-        current_sidebar = ceo_sidebar_items
-
     tour_search_form = SearchTourForm()
 
     if tour_search_form.validate_on_submit():
@@ -88,11 +72,10 @@ def search_tours():
 
         if results:
             return render_template('tour-search.html',
-                                   sidebar_items=sidebar_items,
                                    tour_search_form=tour_search_form,
                                    results=results)
 
-    return render_template('tour-search.html', sidebar_items=current_sidebar,
+    return render_template('tour-search.html',
                            tour_search_form=tour_search_form,
                            results=None)
 

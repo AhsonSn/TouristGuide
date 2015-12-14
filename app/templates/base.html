@@ -6,7 +6,7 @@
 {% block scripts %}
 {{ super() }}
 {% if current_user.account_type_id == 1 %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/checkmail.js') }}"></script>    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/checkmail.js') }}"></script>
 {% endif %}
 {% endblock scripts %}
 {% block navbar %}
@@ -15,11 +15,7 @@
 {% block content %}
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
-      {% set active_page = active_page %}
-      {% include "sidebar.html" %}
-    </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="col-sm-12 col-md-12 main">
       {% block page_content %}
       {% endblock page_content %}
     </div>
