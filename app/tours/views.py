@@ -44,7 +44,7 @@ def tours(current_page):
     )
 
     app_tours = []
-    if current_user is not None:
+    if current_user.is_authenticated:
         rows = RegistrationDAO.get_registrations_tour_ids_of_user(current_user)
         app_tours = [x[0] for x in rows]
 
@@ -65,9 +65,14 @@ def view_tour(tour_id):
 
     tour = TourDAO.get_tour_by_id(tour_id)
     weathers = WeatherFactory(tour.place, 7).get_weathers()
+    
+    applyed = False
+    if current_user.is_authenticated:
+        applyed = RegistrationDAO.check_registrated(current_user, tour)
+
     return render_template('tour-view.html', sidebar_items=current_sidebar,
                            tour=tour,
-                           weathers=weathers, user=current_user)
+                           weathers=weathers, user=current_user, applyed=applyed)
 
 
 @tours_blueprint.route('/search-tours', methods=('GET', 'POST'))

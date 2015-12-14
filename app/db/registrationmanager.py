@@ -76,3 +76,10 @@ class RegistrationDAO(object):
         database.session.commit()
 
         return True
+
+    @staticmethod
+    def check_registrated(user_, tour_):
+        if Registration.query.filter_by(tour=tour_, user=user_).first()  is not None:
+            return True
+
+        return False
