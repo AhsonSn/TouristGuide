@@ -2,7 +2,9 @@ import os
 import random
 import string
 
+from PIL import Image
 from flask import current_app, request
+from resizeimage import resizeimage
 
 
 class UploadManager(object):
@@ -22,15 +24,18 @@ class UploadManager(object):
 
         for image in request.files.getlist('images'):
             if image.content_type:
-                filename = generate_random_string(20) + \
-                           os.path.splitext(image.filename)[1]
+                with Image.open(image) as img:
+                    resized_image = resizeimage.resize_cover(img, [720, 450])
 
-                image.save(os.path.join(
-                        current_app.config['TOUR_IMAGES_UPLOAD_FOLDER'],
-                        filename)
-                )
+                    filename = generate_random_string(20) + \
+                               os.path.splitext(image.filename)[1]
 
-                buffer.append(filename)
+                    resized_image.save(os.path.join(
+                            current_app.config['TOUR_IMAGES_UPLOAD_FOLDER'],
+                            filename), img.format
+                    )
+
+                    buffer.append(filename)
 
         return ";".join(buffer)
 
