@@ -8,6 +8,9 @@
 {% if current_user.account_type_id == 1 %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/checkmail.js') }}"></script>
 {% endif %}
+{% if current_user.account_type_id == 3 %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/checknotification.js') }}"></script>
+{% endif %}
 {% endblock scripts %}
 {% block navbar %}
 {% include "navbar.html" %}

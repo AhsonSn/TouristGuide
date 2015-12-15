@@ -32,3 +32,10 @@ class SearchTourForm(Form):
     place = StringField(u'Túra helyszíne', validators=[Optional()])
     date = DateField(u'Túra időpontja', validators=[Optional()])
     submit = SubmitField(u'Mehet')
+
+class DelayTourForm(Form):
+    def generate_csrf_token(self, csrf_context=None):
+        return super(DelayTourForm, self).generate_csrf_token(csrf_context)
+
+    date = StringField(u'Az új időpont')
+    submit = SubmitField(u'Elhalaszt')

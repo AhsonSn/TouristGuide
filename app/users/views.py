@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash
 from .forms import LoginForm, RegisterForm, SettingsForm, MessageForm
 from ..db.experiencemanager import ExperienceDAO
 from ..db.messagemanager import MessageDAO
+from ..db.notificationmanager import NotificationDAO
 from ..db.registrationmanager import RegistrationDAO
 from ..db.tourmanager import TourDAO
 from ..db.usermanager import UserDAO
@@ -12,9 +13,10 @@ from ..db.usermanager import UserDAO
 users = Blueprint('users', __name__)
 
 
-@users.route('/num')
+@users.route('/create')
 def create_table():
-    UserDAO.incTour(current_user)
+    from app import database
+    database.create_all()    
     return redirect(url_for('basic.home'))
 
 
@@ -183,7 +185,7 @@ def messages():
 
     mess = MessageDAO.get_list()
 
-    return render_template('message.html', results=mess)
+    return render_template('message.html', results=mess, ismessage=1)
 
 
 @users.route('/writemessages', methods=('GET', 'POST'))
@@ -227,3 +229,33 @@ def deletemessage(mid):
     MessageDAO.delete(mid)
 
     return redirect("/messages")
+
+@users.route('/checknotification')
+@login_required
+def checknotification():
+    return str(NotificationDAO.get_new_mails_count(current_user))
+
+@users.route('/notification')
+@login_required
+def notification():
+    if current_user.account_type_id != 3:
+        return redirect('/')
+
+    mess = NotificationDAO.get_list(current_user)
+
+    return render_template('message.html', results=mess, ismessage=0)
+
+@users.route('/readnotification/<messageid>')
+@login_required
+def readnotification(messageid):
+    success = NotificationDAO.refreshRead(messageid, 1)
+
+    return '0'
+
+
+@users.route('/deletenotification/<mid>')
+@login_required
+def deletenotification(mid):
+    NotificationDAO.delete(mid)
+
+    return redirect("/notification")

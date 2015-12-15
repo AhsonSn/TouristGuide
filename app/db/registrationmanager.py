@@ -20,6 +20,15 @@ class RegistrationDAO(object):
         return ret_list
 
     @staticmethod
+    def get_tour_users_id(tourid):
+        list_of_id = database.session.query(Registration.user_id).filter_by(
+            tour_id=tourid).all()
+     
+        ret_list = [x[0] for x in list_of_id]
+
+        return ret_list
+
+    @staticmethod
     def get_registrations_of_user(user):
         return Registration.query.filter_by(user_id=user.id).all()
 
@@ -83,3 +92,7 @@ class RegistrationDAO(object):
             return True
 
         return False
+
+    @staticmethod
+    def delete_tour(tour_id):
+        Registration.query.filter_by(tour_id=tour_id).delete()
