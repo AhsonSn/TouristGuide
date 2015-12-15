@@ -196,3 +196,36 @@ class Message(database.Model):
 
     def __repr__(self):
         return '<Message \'{}\'>'.format(self.id)
+
+class Notification(database.Model):
+    def __init__(self, to_user, subject_, message, date_):
+        self.to_user_id = to_user
+        self.subject = subject_
+        self.message = message
+        self.date = date_
+        self.read = 0
+
+
+    __tablename__ = 'notification'
+
+    id = database.Column(database.Integer, primary_key=True)
+
+    to_user_id = database.Column(
+        database.Integer, database.ForeignKey('users.id'), nullable=False
+    )
+
+    to_user = database.relationship(
+        'User', backref=database.backref('notification', lazy='dynamic')
+    )
+
+    date = database.Column(database.DateTime, nullable=False)
+
+    message = database.Column(database.Text)
+
+    read = database.Column(database.Integer)
+
+    subject = database.Column(database.Text)
+
+    def __repr__(self):
+        return '<Notification \'{}\'>'.format(self.id)
+
