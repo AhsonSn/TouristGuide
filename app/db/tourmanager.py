@@ -174,7 +174,7 @@ class TourDAO(object):
 
         li = RegistrationDAO.get_tour_users_id(id)
 
-        message = u"Kedves Felhasználó! \n Sajnálatos módon a " +  tourname + "túrát el kell halasztanunk a következő időpontra: "+date.strftime('%Y.%m.%d. %H:%M')+". \n Köszönjük megértésed. \n (Az 5 tura utáni kedvezmény természetesen megmarad.)" 
+        message = u"Kedves Felhasználó! \n Sajnálatos módon a " +  tourname + "túrát el kell halasztanunk a következő időpontra: "+date.strftime('%Y.%m.%d. %H:%M')+". \n Köszönjük megértésed."
 
         NotificationDAO.insert_new_message(li, "Túra elhalasztás", message)
 
