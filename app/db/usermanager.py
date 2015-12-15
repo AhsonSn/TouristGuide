@@ -30,6 +30,7 @@ class UserDAO(object):
         user.fullname = extr["fullName"]
         user.birth = extr["birth"]
         user.phone = extr["phone"]
+        user.numoftours = 0
 
         if extr["avatar"]:
             user.avatar_src = UploadManager.upload_avatar(extr["avatar"])
