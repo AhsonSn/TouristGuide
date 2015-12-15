@@ -5,6 +5,7 @@ from sqlalchemy import update, func
 from app import database
 from .models import Tour
 from .registrationmanager import RegistrationDAO
+from .notificationmanager import NotificationDAO
 from ..basic.models import UploadManager
 
 
@@ -104,7 +105,7 @@ class TourDAO(object):
         :param tour_id: id of tour.
         :return: list of registered user's email.
         """
-        l = RegistrationDAO.get_tour_users_email(tour_id)
+        l = RegistrationDAO.get_tour_users_id(tour_id)
         RegistrationDAO.delete_tour(tour_id)
 
         Tour.query.filter_by(id=tour_id).delete()
@@ -156,5 +157,27 @@ class TourDAO(object):
 
         return True
 
+    @staticmethod
     def getNameOfTour(id):
         return database.session.query(Tour.name).filter(Tour.id == id).first()[0]
+
+    @staticmethod
+    def delay_tour(id, date,tourname):
+        length = database.session.query(Tour.start_datetime).filter(Tour.id == id).first()[0] - database.session.query(Tour.end_datetime).filter(Tour.id == id).first()[0]
+        print(type(date))
+        end_date = date + length
+        database.session.execute(
+            update(Tour).where(Tour.id == id).values(
+                start_datetime = date,
+                end_datetime = end_date)
+        )
+
+        li = RegistrationDAO.get_tour_users_id(id)
+
+        message = u"Kedves Felhasználó! \n Sajnálatos módon a " +  tourname + "túrát el kell halasztanunk a következő időpontra: "+date.strftime('%Y.%m.%d. %H:%M')+". \n Köszönjük megértésed. \n (Az 5 tura utáni kedvezmény természetesen megmarad.)" 
+
+        NotificationDAO.insert_new_message(li, "Túra elhalasztás", message)
+
+        database.session.commit()
+
+

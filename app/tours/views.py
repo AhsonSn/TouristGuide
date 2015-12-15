@@ -2,11 +2,14 @@ from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 
 from app.weather.weatherfactory import WeatherFactory
-from .forms import TourForm, SearchTourForm
+from .forms import TourForm, SearchTourForm, DelayTourForm
 from ..db.tourmanager import TourDAO
 from app.db.usermanager import UserDAO
 from app.db.registrationmanager import RegistrationDAO
 from app.db.notificationmanager import NotificationDAO
+
+import time
+from datetime import datetime
 
 tours_blueprint = Blueprint('tours', __name__)
 tours_blueprint.current_items_per_page = None
@@ -60,6 +63,8 @@ def view_tour(tour_id):
     applyed = False
     if current_user.is_authenticated:
         applyed = RegistrationDAO.check_registrated(current_user, tour)
+
+    delay = DelayTourForm()
 
     return render_template('tour-view.html',
                            tour=tour,
@@ -116,3 +121,16 @@ def deleteTour(id):
     NotificationDAO.insert_new_message(listOfIds, "Túra törlés", message)
 
     return redirect(url_for('.tours', current_page=1))    
+
+@tours_blueprint.route('/tourdelay/<int:id>/<string:date>')
+@login_required
+def tourdelay(id, date):
+    tourname = TourDAO.getNameOfTour(id)
+    dateval = datetime.strptime(date, '%Y.%m.%d. %H:%M')
+    
+    if dateval < datetime.now():
+        return '0'
+
+    TourDAO.delay_tour(id, dateval, tourname)
+
+    return '1'

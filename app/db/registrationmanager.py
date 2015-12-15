@@ -20,7 +20,7 @@ class RegistrationDAO(object):
         return ret_list
 
     @staticmethod
-    def get_tour_users_email(tourid):
+    def get_tour_users_id(tourid):
         list_of_id = database.session.query(Registration.user_id).filter_by(
             tour_id=tourid).all()
      
