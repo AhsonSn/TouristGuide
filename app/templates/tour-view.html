@@ -5,15 +5,17 @@
 {% if current_user.account_type_id == 1 or current_user.account_type_id == 2 %}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/hu.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/delay.js') }}"></script>
 {% endif %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/3.3.0/ekko-lightbox.min.js"></script>
-<script src="{{ url_for('static', filename='js/tour-view.js') }}"> </script>
+<script src="{{ url_for('static', filename='js/tour-view.js') }}"></script>
 {% endblock scripts %}
 {% block styles %}
 {{ super() }}
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"
+      rel="stylesheet">
 {% endblock styles %}
 
 {% block page_content %}
@@ -27,7 +29,8 @@
         <div class="row">
             {% for image in tour.images.split(';') %}
             <div class="col-sm-2">
-                <a href="{{ url_for('static', filename='uploads/tour-images/{}'.format(image)) }}" data-toggle="lightbox" data-title="{{ tour.name }}" class="thumbnail">
+                <a href="{{ url_for('static', filename='uploads/tour-images/{}'.format(image)) }}"
+                   data-toggle="lightbox" data-title="{{ tour.name }}" class="thumbnail">
                     <img src="{{ url_for('static', filename='uploads/tour-images/{}'.format(image)) }}">
                 </a>
             </div>
@@ -35,31 +38,37 @@
             {% endif %}
         </div>
         <p style="margin-bottom: 20px">{{ tour.description }}</p>
-        <table class="table table-bordered table-hover">
-            <tr>
-                <th>Indulás</th>
-                <th>Érkezés</th>
-                <th>Helyszín</th>
-                <th>Jelentkezési díj</th>
-                <th>Túravezető</th>
-                <th>Szükséges tapasztalati szint</th>
-            </tr>
-            <tr>
-                <td>{{ tour.start_datetime|literal_date }} {{ tour.start_datetime|time }}</td>
-                <td>{{ tour.end_datetime|literal_date }} {{ tour.end_datetime|time }}</td>
-                <td>{{ tour.place }}</td>
-                <td>
-                    {% if user.is_authenticated and user.allowance is not none %}
-                    {{ (tour.price * ((100 - user.allowance)/100))|round|int }} Ft 5%
-                    {% else %}
-                    {{ tour.price }} Ft
-                    {% endif %}
-                </td>
-                <td>{{ tour.tour_guide.fullname }}</td>
-                <td>{{ tour.experience.name }}</td>
-            </tr>
-        </table>
-        {% include "weather-widget.html" %}
+
+        <div class="panel-body">
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>Indulás</th>
+                    <th>Érkezés</th>
+                    <th>Helyszín</th>
+                    <th>Jelentkezési díj</th>
+                    <th>Túravezető</th>
+                    <th>Szükséges tapasztalati szint</th>
+                </tr>
+                <tr>
+                    <td>{{ tour.start_datetime|literal_date }} {{ tour.start_datetime|time }}</td>
+                    <td>{{ tour.end_datetime|literal_date }} {{ tour.end_datetime|time }}</td>
+                    <td>{{ tour.place }}</td>
+                    <td>
+                        {% if user.is_authenticated and user.allowance is not none %}
+                        {{ (tour.price * ((100 - user.allowance)/100))|round|int }} Ft 5%
+                        {% else %}
+                        {{ tour.price }} Ft
+                        {% endif %}
+                    </td>
+                    <td>{{ tour.tour_guide.fullname }}</td>
+                    <td>{{ tour.experience.name }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="panel-body">
+            {% include "weather-widget.html" %}
+        </div>
+
     </div>
     {% if current_user.is_authenticated %}
     <div class="panel-footer clearfix">
@@ -70,12 +79,14 @@
         </a>
         {% else %}
         {% if applyed %}
-        <a href="{{ url_for('users.detach_from_tour', tour_id=tour.id) }}" class="btn btn-danger pull-right" role="button">
+        <a href="{{ url_for('users.detach_from_tour', tour_id=tour.id) }}" class="btn btn-danger pull-right"
+           role="button">
             <span class="glyphicon glyphicon-remove-circle"></span>
             Lemondás
         </a>
         {% else %}
-        <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success pull-right" role="button">
+        <a href="{{ url_for('users.apply_for_tour', tour_id=tour.id) }}" class="btn btn-success pull-right"
+           role="button">
             <span class="glyphicon glyphicon-ok"></span>
             Jelentkezek
         </a>
@@ -88,40 +99,45 @@
             Elhalasztás
         </button>
 
-  <div class="modal fade" id="delay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">
-                                Elhalasztás
-                            </h4>
-                        </div>
-                        <div class="modal-body" style="font-weight: normal;">
-                            <b>Az új időpont:</b> <br/>
-                            <div class='input-group date' id='delaydate'>
-                                <input type='text' class="form-control" id="delaydate0"/>
+        <div class="modal fade" id="delay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            Elhalasztás
+                        </h4>
+                    </div>
+                    <div class="modal-body" style="font-weight: normal;">
+                        <b>Az új időpont:</b> <br/>
+
+                        <div class='input-group date' id='delaydate'>
+                            <input type='text' class="form-control" id="delaydate0"/>
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
-                            </div> <br/>
-                            <div id="errormsg" class="alert alert-danger" style="text-align:center; display: none;" >
-                                A túra késleltetés nem lehetséges.
-                            </div>
-                            <div id="success" class="alert alert-success" style="text-align:center; display: none;" >
-                                Sikeres késleltetés.
-                            </div>
-                            <button id="delaybutton" type="button" class="btn btn-primary btn-block" onclick="delayTour({{ tour.id }})">
-                                <span class="glyphicon glyphicon-time"></span>
-                                Elhalasztás
-                            </button> 
-
                         </div>
+                        <br/>
+
+                        <div id="errormsg" class="alert alert-danger" style="text-align:center; display: none;">
+                            A túra késleltetés nem lehetséges.
+                        </div>
+                        <div id="success" class="alert alert-success" style="text-align:center; display: none;">
+                            Sikeres késleltetés.
+                        </div>
+                        <button id="delaybutton" type="button" class="btn btn-primary btn-block"
+                                onclick="delayTour({{ tour.id }})">
+                            <span class="glyphicon glyphicon-time"></span>
+                            Elhalasztás
+                        </button>
+
                     </div>
                 </div>
             </div>
+        </div>
 
-        <a href="{{ url_for('tours.deleteTour', id=tour.id) }}" class="btn btn-danger pull-left" role="button" >
+        <a href="{{ url_for('tours.deleteTour', id=tour.id) }}" class="btn btn-danger pull-left" role="button">
             <span class="glyphicon glyphicon-remove-circle"></span>
             Törlés
         </a>
