@@ -155,3 +155,6 @@ class TourDAO(object):
         database.session.commit()
 
         return True
+
+    def getNameOfTour(id):
+        return database.session.query(Tour.name).filter(Tour.id == id).first()[0]

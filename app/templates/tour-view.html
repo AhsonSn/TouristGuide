@@ -65,6 +65,13 @@
         </a>
         {% endif %}
         {% endif %}
+
+        {% if current_user.account_type_id == 1 or current_user.account_type_id == 2%}
+        <a href="{{ url_for('tours.deleteTour', id=tour.id) }}" class="btn btn-danger pull-left" role="button">
+            <span class="glyphicon glyphicon-remove-circle"></span>
+            Törlés
+        </a>
+        {% endif %}
     </div>
     {% endif %}
 </div>

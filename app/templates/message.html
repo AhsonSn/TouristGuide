@@ -22,14 +22,23 @@
         <tr id="sor_{{ message.id }}">
     {% endif %}
         <td>{{ message.date|literal_date }} {{ message.date|time }}</td>
-        <td>{{ message.from_user.fullname }} ({{message.from_user.username}})</td>
+            {% if ismessage == 1 : %}
+            <td>{{ message.from_user.fullname }} ({{message.from_user.username}})</td>
+            {% else %}
+            <td>Rendszer üzenet</td>
+            {% endif %}
         <td>{{ message.subject }}</td>
         <td style="vertical-align: middle">
             <!-- Button trigger modal -->
+            {% if ismessage== 1 : %}
             <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#{{ message.id }}" onclick="setread({{ message.id }})">
                 <span class="glyphicon glyphicon-eye-open"></span>
             </button>
-
+            {% else %}
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#{{ message.id }}" onclick="setreadNotification({{ message.id }})">
+            <span class="glyphicon glyphicon-eye-open"></span>
+            </button>
+            {% endif %}
             <!-- Modal -->
             <div class="modal fade" id="{{ message.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
@@ -40,7 +49,11 @@
                                 <table>
                                     <tr>
                                         <td><b>Feladó: </b></td>
-                                        <td>{{ message.from_user.fullname }}({{ message.from_user.username }})</td>
+                                        {% if ismessage == 1 : %}
+                                        <td>{{ message.from_user.fullname }} ({{message.from_user.username}})</td>
+                                        {% else %}
+                                        <td>Rendszer üzenet</td>
+                                        {% endif %}
                                     </tr>
                                     <tr>
                                         <td><b>Tárgy: </b></td>
@@ -58,9 +71,15 @@
         </td>
 
         <td style="vertical-align: middle">
+            {% if ismessage == 1 : %}
             <a href="/deletemessage/{{ message.id }}" class="btn btn-danger btn-block" role="button">
                 <span class="glyphicon glyphicon-remove-circle"></span>
             </a>
+            {% else %}
+            <a href="/deletenotification/{{ message.id }}" class="btn btn-danger btn-block" role="button">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+            </a>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}

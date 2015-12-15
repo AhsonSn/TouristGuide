@@ -6,6 +6,7 @@ from .forms import TourForm, SearchTourForm
 from ..db.tourmanager import TourDAO
 from app.db.usermanager import UserDAO
 from app.db.registrationmanager import RegistrationDAO
+from app.db.notificationmanager import NotificationDAO
 
 tours_blueprint = Blueprint('tours', __name__)
 tours_blueprint.current_items_per_page = None
@@ -102,3 +103,16 @@ def update_tour_images(id_, string):
         return '1'
     else:
         return u'Hozzáférés megtagadva'
+
+@tours_blueprint.route('/deleteTour/<int:id>')
+@login_required
+def deleteTour(id):
+    tourname = TourDAO.getNameOfTour(id)
+    print(tourname)
+    listOfIds = TourDAO.delete_tour(id)
+
+    message = "Kedves Felhasználó!\n Sajnálatos módon a " +  tourname + "túrát le kell mondanunk. \n Köszönjük megértésed. \n(Az 5 tura utáni kedvezmény természetesen megmarad.)" 
+
+    NotificationDAO.insert_new_message(listOfIds, "Túra törlés", message)
+
+    return redirect(url_for('.tours', current_page=1))    

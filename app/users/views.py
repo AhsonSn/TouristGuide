@@ -185,7 +185,7 @@ def messages():
 
     mess = MessageDAO.get_list()
 
-    return render_template('message.html', results=mess)
+    return render_template('message.html', results=mess, ismessage=1)
 
 
 @users.route('/writemessages', methods=('GET', 'POST'))
@@ -243,4 +243,19 @@ def notification():
 
     mess = NotificationDAO.get_list(current_user)
 
-    return render_template('message.html', results=mess)
+    return render_template('message.html', results=mess, ismessage=0)
+
+@users.route('/readnotification/<messageid>')
+@login_required
+def readnotification(messageid):
+    success = NotificationDAO.refreshRead(messageid, 1)
+
+    return '0'
+
+
+@users.route('/deletenotification/<mid>')
+@login_required
+def deletenotification(mid):
+    NotificationDAO.delete(mid)
+
+    return redirect("/notification")
